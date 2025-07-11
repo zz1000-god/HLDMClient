@@ -27,7 +27,7 @@ jobs:
       with:
         name: HLDMClient
         path: |
-          projects\vs2019\Release\client.dll
+          Release\client.dll
 
   release:
     needs: build
