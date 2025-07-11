@@ -72,7 +72,7 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 Or build via command line:
 ```bash
 msbuild path\to\your\project.sln /p:Configuration=Release
-
+```
 ---
 
 Half Life 1 SDK LICENSE
