@@ -16,19 +16,30 @@ jobs:
     - name: Set up MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Build hl_cdll project only
+    - name: Build hl_cdll
       run: |
         cd $env:GITHUB_WORKSPACE
         msbuild projects/vs2019/projects.sln /t:hl_cdll /p:Configuration=Release
 
+    - name: Find and package client.dll and client.pdb
+      shell: pwsh
+      run: |
+        $dll = Get-ChildItem -Recurse -Filter client.dll | Select-Object -First 1
+        $pdb = Get-ChildItem -Recurse -Filter client.pdb | Select-Object -First 1
 
-    - name: Upload artifact
+        if (-not $dll) { throw "client.dll not found" }
+        if (-not $pdb) { throw "client.pdb not found" }
+
+        Write-Host "Found DLL: $($dll.FullName)"
+        Write-Host "Found PDB: $($pdb.FullName)"
+
+        Compress-Archive -Path $dll.FullName, $pdb.FullName -DestinationPath client.zip
+
+    - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
       with:
         name: HLDMClient
-        path: |
-          Release\hl_cdll\client.dll
-          Release\hl_cdll\client.pdb
+        path: client.zip
 
   release:
     needs: build
@@ -39,10 +50,9 @@ jobs:
       with:
         name: HLDMClient
 
-    - name: Create GitHub Release
+    - name: Publish ZIP to GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        files: |
-          client.dll
+        files: client.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
