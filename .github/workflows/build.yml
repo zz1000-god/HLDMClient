@@ -27,7 +27,8 @@ jobs:
       with:
         name: HLDMClient
         path: |
-          Release\client.dll
+          Release\hl_cdll\client.dll
+          Release\hl_cdll\client.pdb
 
   release:
     needs: build
