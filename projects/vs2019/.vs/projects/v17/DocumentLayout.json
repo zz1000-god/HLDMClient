@@ -1,0 +1,328 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\hl\\halflife\\projects\\vs2019\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\vgui_TeamFortressViewport.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\vgui_ScorePanel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\vgui_ScorePanel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\saytext.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\hud_timer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\hud.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\hud.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\crashhandler.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\forcemodel.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\crashhandler.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\geiger.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\cdll_int.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\ammo.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\util.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\engine\\cdll_int.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\voice_status.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\game_shared\\voice_status.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\forcemodel.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\StudioModelRenderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC1DD765-CFEB-47DA-A2EA-9F1E20A24272}|hl_cdll.vcxproj|D:\\hl\\halflife\\cl_dll\\StudioModelRenderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 15,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "saytext.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\saytext.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\saytext.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\saytext.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\saytext.cpp",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAAAH0AAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-10T16:55:11.438Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "crashhandler.h",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\crashhandler.h",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\crashhandler.h",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\crashhandler.h",
+              "RelativeToolTip": "..\\..\\cl_dll\\crashhandler.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-07-09T17:53:09.759Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "crashhandler.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\crashhandler.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\crashhandler.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\crashhandler.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\crashhandler.cpp",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAHMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T17:52:29.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "geiger.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\geiger.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\geiger.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\geiger.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\geiger.cpp",
+              "ViewState": "AgIAAJwAAAAAAAAAAAAAALoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T17:26:11.885Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "cdll_int.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\cdll_int.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\cdll_int.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\cdll_int.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\cdll_int.cpp",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAAAJ0AAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T14:00:55.027Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ammo.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\ammo.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\ammo.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\ammo.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\ammo.cpp",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAQwFMAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T12:26:22.688Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "hud.h",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\hud.h",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\hud.h",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\hud.h",
+              "RelativeToolTip": "..\\..\\cl_dll\\hud.h",
+              "ViewState": "AgIAAIABAAAAAAAAAAAlwI4BAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-07-09T12:19:18.622Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "hud_timer.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\hud_timer.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\hud_timer.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\hud_timer.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\hud_timer.cpp",
+              "ViewState": "AgIAAK4AAAAAAAAAAAAAAKUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T13:14:48.632Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "cdll_int.h",
+              "DocumentMoniker": "D:\\hl\\halflife\\engine\\cdll_int.h",
+              "RelativeDocumentMoniker": "..\\..\\engine\\cdll_int.h",
+              "ToolTip": "D:\\hl\\halflife\\engine\\cdll_int.h",
+              "RelativeToolTip": "..\\..\\engine\\cdll_int.h",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAAAEwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-07-09T12:40:50.537Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "util.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\util.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\util.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\util.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\util.cpp",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAlwIIAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T12:29:58.159Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "voice_status.h",
+              "DocumentMoniker": "D:\\hl\\halflife\\game_shared\\voice_status.h",
+              "RelativeDocumentMoniker": "..\\..\\game_shared\\voice_status.h",
+              "ToolTip": "D:\\hl\\halflife\\game_shared\\voice_status.h",
+              "RelativeToolTip": "..\\..\\game_shared\\voice_status.h",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAAAGcAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-07-09T09:37:41.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "voice_status.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\voice_status.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\voice_status.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\voice_status.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\voice_status.cpp",
+              "ViewState": "AgIAAJwCAAAAAAAAAAAAAKgCAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T09:36:56.821Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "vgui_ScorePanel.h",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\vgui_ScorePanel.h",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\vgui_ScorePanel.h",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\vgui_ScorePanel.h",
+              "RelativeToolTip": "..\\..\\cl_dll\\vgui_ScorePanel.h",
+              "ViewState": "AgIAABIBAAAAAAAAAAAQwCEBAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-07-09T09:14:35.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "hud.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\hud.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\hud.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\hud.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\hud.cpp",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACIAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T06:41:10.055Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "vgui_TeamFortressViewport.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\vgui_TeamFortressViewport.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\vgui_TeamFortressViewport.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\vgui_TeamFortressViewport.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\vgui_TeamFortressViewport.cpp",
+              "ViewState": "AgIAADMGAAAAAAAAAAAAADMGAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T06:36:27.79Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "vgui_ScorePanel.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\vgui_ScorePanel.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\vgui_ScorePanel.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\vgui_ScorePanel.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\vgui_ScorePanel.cpp",
+              "ViewState": "AgIAAAkDAAAAAAAAAAAQwBUDAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T06:35:40.894Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "StudioModelRenderer.h",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\StudioModelRenderer.h",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\StudioModelRenderer.h",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\StudioModelRenderer.h",
+              "RelativeToolTip": "..\\..\\cl_dll\\StudioModelRenderer.h",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAACEAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-07-09T06:33:33.037Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "StudioModelRenderer.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\StudioModelRenderer.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\StudioModelRenderer.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\StudioModelRenderer.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\StudioModelRenderer.cpp",
+              "ViewState": "AgIAAJwGAAAAAAAAAAAAALIGAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T06:32:44.397Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "forcemodel.cpp",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\forcemodel.cpp",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\forcemodel.cpp",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\forcemodel.cpp",
+              "RelativeToolTip": "..\\..\\cl_dll\\forcemodel.cpp",
+              "ViewState": "AgIAAAEBAAAAAAAAAAAAAAgBAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-07-09T06:29:31.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "forcemodel.h",
+              "DocumentMoniker": "D:\\hl\\halflife\\cl_dll\\forcemodel.h",
+              "RelativeDocumentMoniker": "..\\..\\cl_dll\\forcemodel.h",
+              "ToolTip": "D:\\hl\\halflife\\cl_dll\\forcemodel.h",
+              "RelativeToolTip": "..\\..\\cl_dll\\forcemodel.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-07-09T06:29:00.37Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
