@@ -1,0 +1,44 @@
+name: Build and Release HLDMClient
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build hl_cdll project only
+      run: msbuild projects\vs2019\project.sln /t:hl_cdll /p:Configuration=Release
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: HLDMClient
+        path: |
+          projects\vs2019\Release\client.dll
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: HLDMClient
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          client.dll
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
