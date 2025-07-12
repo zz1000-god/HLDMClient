@@ -7,15 +7,16 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 ## 🚀 Features & Changes
 
 ### 🎨 HUD Enhancements
-- Added support for color tags in HUD strings (`hud_color "255 160 0"`).
+- Added support for color tags
+- Added support for change HUD coolor (`hud_color "255 160 0"`).
 - Added timers:
-  - Time left until map ends
-  - Time elapsed since map start
-  - Local personal timer (`hud_timer 1`, `2`, `3`)
+  - Time left until map ends (`hud_timer 1`)
+  - Time elapsed since map start (`hud_timer 2`)
+  - Local personal timer (`hud_timer 3`)
 
 ### 🔧 Compatibility
 - Support for both old and new `+USE` (E key) mechanics.
-  - Use `cl_useslowdown 0` for legacy servers
+  - Use `cl_useslowdown 0` for legacy servers (instant stop)
   - Use `cl_useslowdown 1` for modern servers
 
 ### 👕 Forced Models
@@ -52,13 +53,14 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 
 ### 🌟 Extended Sprites
 - Support for larger sprites like HL25
-- Use `cl_sprites 640` to load high-res sprites
+- Use `cl_sprites 320` , `640` , `1280` , `2560` to load sprites 640 standart (requires restart game)
 > ⚠️ Warning: If a sprite is missing at that resolution, the game may crash.
 
 ---
 
 ## 🧪 Tested On
-- Latest **Steam** version of Half-Life as of July 2025
+- Latest **Steam** version of Half-Life 25th Anniversary (9920)
+- will work in **Steam-legacy** version of Half-Life (8684)
 
 ---
 
