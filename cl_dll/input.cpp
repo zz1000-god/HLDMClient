@@ -133,11 +133,37 @@ NOTE:  Only works for text with +word in it.
 */
 namespace autofuncs
 {
+	static cvar_t* cl_autojump;
+
 	static struct {
 		bool onground = false;
 		bool inwater = false;
 		bool walking = true; // Movetype == MOVETYPE_WALK. Filters out noclip, being on ladder, etc.
 	} player;
+
+	static void handle_autojump(usercmd_t* cmd)
+	{
+		static bool s_jump_was_down_last_frame = false;
+
+		if (cl_autojump->value != 0.0f)
+		{
+			bool should_release_jump = (!player.onground && !player.inwater && player.walking);
+
+			/*
+			 * Spam pressing and releasing jump if we're stuck in a spot where jumping still results in
+			 * being onground in the end of the frame. Without this check, +jump would remain held and
+			 * when the player exits this spot they would have to release and press the jump button to
+			 * start jumping again. This also helps with exiting water or ladder right onto the ground.
+			 */
+			if (s_jump_was_down_last_frame && player.onground && !player.inwater && player.walking)
+				should_release_jump = true;
+
+			if (should_release_jump)
+				cmd->buttons &= ~IN_JUMP;
+		}
+
+		s_jump_was_down_last_frame = ((cmd->buttons & IN_JUMP) != 0);
+	}
 
 	static void handle_ducktap(usercmd_t* cmd)
 	{
@@ -800,6 +826,8 @@ void CL_DLLEXPORT CL_CreateMove(float frametime, struct usercmd_s* cmd, int acti
 		cmd->buttons |= IN_DUCK;
 		autofuncs::handle_ducktap(cmd); // Ducktap takes priority over autojump
 	}
+	else
+		autofuncs::handle_autojump(cmd);
 
 	gEngfuncs.GetViewAngles( (float *)viewangles );
 	// Set current view angles.
@@ -1047,6 +1075,8 @@ void InitInput (void)
 	cl_pitchdown		= gEngfuncs.pfnRegisterVariable ( "cl_pitchdown", "89", 0 );
 
 	cl_vsmoothing		= gEngfuncs.pfnRegisterVariable ( "cl_vsmoothing", "0.05", FCVAR_ARCHIVE );
+
+	autofuncs::cl_autojump = gEngfuncs.pfnRegisterVariable("cl_autojump", "1", FCVAR_ARCHIVE);
 
 	m_pitch			    = gEngfuncs.pfnRegisterVariable ( "m_pitch","0.022", FCVAR_ARCHIVE );
 	m_yaw				= gEngfuncs.pfnRegisterVariable ( "m_yaw","0.022", FCVAR_ARCHIVE );
