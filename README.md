@@ -14,6 +14,10 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - Time elapsed since map start (`hud_timer 2`)
   - Local personal timer (`hud_timer 3`)
 
+### Movement changes 
+ - Added `+ducktap` like in OpenAG
+ - Added `cl_autojump 1` , `0` like in OpenAG
+
 ### 🔧 Compatibility
 - Support for both old and new `+USE` (E key) mechanics.
   - Use `cl_useslowdown 0` for legacy servers (instant stop)
@@ -53,7 +57,7 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 
 ### 🌟 Extended Sprites
 - Support for larger sprites like HL25
-- Use `cl_sprites 320` , `640` , `1280` , `2560` to load sprites 640 standart (requires restart game)
+- Use `cl_sprites 320` , `640` , `1280` , `2560` to load sprites, 640 standart (requires restart game)
 > ⚠️ Warning: If a sprite is missing at that resolution, the game may crash.
 
 ---
