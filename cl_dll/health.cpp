@@ -66,6 +66,9 @@ int CHudHealth::Init(void)
 
 	memset(m_dmg, 0, sizeof(DAMAGE_IMAGE) * NUM_DMG_TYPES);
 
+	hud_health_pos = CVAR_CREATE("hud_health_pos", "0 0", FCVAR_ARCHIVE);
+	hud_health_bar = CVAR_CREATE("hud_health_bar", "1", FCVAR_ARCHIVE);
+
 
 	gHUD.AddHudElem(this);
 	return 1;
@@ -210,23 +213,44 @@ int CHudHealth::Draw(float flTime)
 		HealthWidth = gHUD.GetSpriteRect(gHUD.m_HUD_number_0).right - gHUD.GetSpriteRect(gHUD.m_HUD_number_0).left;
 		int CrossWidth = gHUD.GetSpriteRect(m_HUD_cross).right - gHUD.GetSpriteRect(m_HUD_cross).left;
 
-		y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
-		x = CrossWidth /2;
+		        int customX = 0, customY = 0;
+        bool useCustomPos = false;
+		if (hud_health_pos && strcmp(hud_health_pos->string, "0 0") != 0)
+		{
+			if (sscanf(hud_health_pos->string, "%d %d", &customX, &customY) == 2)
+				useCustomPos = true;
+		}
 
+		if (useCustomPos)
+		{
+			x = customX;
+			y = customY;
+		}
+		else
+		{
+			y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+			x = CrossWidth / 2;
+		}
+
+		// Draw health icon
 		SPR_Set(gHUD.GetSprite(m_HUD_cross), r, g, b);
 		SPR_DrawAdditive(0, x, y, &gHUD.GetSpriteRect(m_HUD_cross));
 
-		x = CrossWidth + HealthWidth / 2;
+		// Draw health number right after icon
+		int numberX = x + CrossWidth + HealthWidth / 2;
+		int numberY = y;
+		numberX = gHUD.DrawHudNumber(numberX, numberY, DHN_3DIGITS | DHN_DRAWZERO, m_iHealth, r, g, b);
 
-		x = gHUD.DrawHudNumber(x, y, DHN_3DIGITS | DHN_DRAWZERO, m_iHealth, r, g, b);
+		numberX += HealthWidth / 2;
 
-		x += HealthWidth/2;
-
-		int iHeight = gHUD.m_iFontHeight;
-		int iWidth = HealthWidth/10;
-
-		UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-		FillRGBA(x, y, iWidth, iHeight, r, g, b, a);
+		// Draw bar right after number, only if enabled
+		if (hud_health_bar && hud_health_bar->value != 0.0f)
+		{
+			int iHeight = gHUD.m_iFontHeight;
+			int iWidth = HealthWidth / 10;
+			UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
+			FillRGBA(numberX, numberY, iWidth, iHeight, r, g, b, a);
+		}
 	}
 
 	DrawDamage(flTime);
