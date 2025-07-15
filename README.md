@@ -17,7 +17,7 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - `hud_ammo1_pos "x y"` change position of primary ammo, default "0 0" <- disabled
   - `hud_ammo2_pos "x y"` change position of secondary ammo, like grenades in mp5
   - `hud_health_pos "x y"` change position of health
-  - `hud_health_bar "1"` enable\disable after health number vertical bar
+  - `hud_health_bar "1"` enable\disable after health vertical bar
   - `hud_battery_pos "x y"` change position of battery
   - `hud_speedometer_pos "x y"` change position of speedometer
   - `hud_weapon_pos "x y"` change position of weapon sprite
