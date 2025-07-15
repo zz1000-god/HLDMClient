@@ -9,6 +9,7 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 ### 🎨 HUD Enhancements
 - Added support for color tags
 - Added support for change HUD coolor (`hud_color "255 160 0"`).
+- Added speedometer toggle with `hud_speedometer 1` , `0`
 - Added timers:
   - Time left until map ends (`hud_timer 1`)
   - Time elapsed since map start (`hud_timer 2`)
@@ -26,11 +27,9 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 ### Movement changes 
  - Added `+ducktap` like in OpenAG
  - Added `cl_autojump 1` , `0` like in OpenAG
-
-### 🔧 Compatibility
-- Support for both old and new `+USE` (E key) mechanics.
-  - Use `cl_useslowdown 0` for legacy servers (instant stop)
-  - Use `cl_useslowdown 1` for modern servers
+ - Support for both old and new `+USE` (E key) mechanics.
+  - Use `cl_useslowdown 0` for pre HL 25 servers (instant stop)
+  - Use `cl_useslowdown 1` for HL 25 servers
 
 ### 👕 Forced Models
 - `cl_forceenmodel "model"` — Replace all enemy models with a specific one.
@@ -60,9 +59,6 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - `cl_scores 2` — shows top 2 players
   - `cl_scores_pos "x y"`
 - Scoreboard now shows each player's model name
-
-### 📈 Speedometer
-- Toggle with `hud_speedometer 1` , `0`
 
 ### 🌟 Extended Sprites
 - Support for larger sprites like HL25
