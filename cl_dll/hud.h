@@ -140,6 +140,9 @@ private:
 	int m_HUD_selection;
 
 	cvar_t* hud_weapon;
+	cvar_t* hud_weapon_pos;
+	cvar_t* hud_ammo1_pos;
+	cvar_t* hud_ammo2_pos;
 
 };
 
@@ -352,6 +355,8 @@ private:
 	int	  m_iBatMax;
 	float m_fFade;
 	int	  m_iHeight;		// width of the battery innards
+
+	cvar_t* hud_battery_pos;
 };
 
 
