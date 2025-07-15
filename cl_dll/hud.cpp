@@ -283,6 +283,17 @@ int __MsgFunc_AllowSpec(const char *pszName, int iSize, void *pbuf)
 		return gViewPort->MsgFunc_AllowSpec( pszName, iSize, pbuf );
 	return 0;
 }
+void __CmdFunc_Append()
+{
+	if (gEngfuncs.Cmd_Argc() != 2) {
+		if (!gEngfuncs.pDemoAPI->IsPlayingback())
+			gEngfuncs.Con_Printf("append <command> - put the command into the end of the command buffer.\n");
+
+		return;
+	}
+
+	EngineClientCmd(gEngfuncs.Cmd_Argv(1));
+}
 
 cvar_t* cl_useslowdown = NULL;
 // This is called every time the DLL is loaded
@@ -324,6 +335,9 @@ void CHud :: Init( void )
 	// VGUI Menus
 	HOOK_MESSAGE( VGUIMenu );
 
+	HOOK_COMMAND("append", Append);
+
+	EngineClientCmd("alias zpecial \"append _zpecial\"");
 	force_model::hook_commands();
 
 	CVAR_CREATE( "hud_classautokill", "1", FCVAR_ARCHIVE | FCVAR_USERINFO );		// controls whether or not to suicide immediately on TF class switch
