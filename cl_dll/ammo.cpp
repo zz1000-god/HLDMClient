@@ -297,6 +297,9 @@ int CHudAmmo::Init(void)
 	CVAR_CREATE( "hud_drawhistory_time", HISTORY_DRAW_TIME, 0 );
 	CVAR_CREATE( "hud_fastswitch", "0", FCVAR_ARCHIVE );	// controls whether or not weapons can be selected in one keypress
 	hud_weapon = CVAR_CREATE("hud_weapon", "0", FCVAR_ARCHIVE);
+	hud_weapon_pos = CVAR_CREATE("hud_weapon_pos", "0 0", FCVAR_ARCHIVE);
+	hud_ammo1_pos = CVAR_CREATE("hud_ammo1_pos", "0 0", FCVAR_ARCHIVE);
+	hud_ammo2_pos = CVAR_CREATE("hud_ammo2_pos", "0 0", FCVAR_ARCHIVE);
 
 	m_iFlags |= HUD_ACTIVE; //!!!
 
@@ -910,8 +913,16 @@ int CHudAmmo::Draw(float flTime)
 
 	y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight/2;
 
+	int customX = 0, customY = 0;
+	int useCustomPos = false;
+	if (hud_weapon_pos && strcmp(hud_weapon_pos->string, "0 0") != 0)
+	{
+		if (sscanf(hud_weapon_pos->string, "%d %d", &customX, &customY) == 2)
+			useCustomPos = true;
+	}
+
 	//Draw the weapon sprite
-	if (hud_weapon && hud_weapon->value != 0.0f)
+	if (hud_weapon && hud_weapon->value != 0.0f && useCustomPos == false)
 	{
 		SPR_Set(m_pWeapon->hInactive, r, g, b);
 		int spriteHeight = m_pWeapon->rcInactive.bottom - m_pWeapon->rcInactive.top;
@@ -929,6 +940,40 @@ int CHudAmmo::Draw(float flTime)
 
 		SPR_DrawAdditive(0, x, adjustedY, &m_pWeapon->rcInactive);
 	}
+	else if (hud_weapon && hud_weapon->value != 0.0f && useCustomPos) {
+		SPR_Set(m_pWeapon->hInactive, r, g, b);
+		x = customX;
+		y = customY;
+		SPR_DrawAdditive(0, x, y, &m_pWeapon->rcInactive);
+	}
+
+	int defaultY = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+	int iIconWidth = m_pWeapon->rcAmmo.right - m_pWeapon->rcAmmo.left;
+	// Parse hud_ammo1_pos
+	int ammo1X = ScreenWidth - (8 * AmmoWidth) - iIconWidth;
+	int ammo1Y = defaultY;
+	if (hud_ammo1_pos && strcmp(hud_ammo1_pos->string, "0 0") != 0)
+	{
+		int x, y;
+		if (sscanf(hud_ammo1_pos->string, "%d %d", &x, &y) == 2)
+		{
+			ammo1X = x;
+			ammo1Y = y;
+		}
+	}
+
+	// Parse hud_ammo2_pos
+	int ammo2X = ScreenWidth - 4 * AmmoWidth;
+	int ammo2Y = defaultY - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 4;
+	if (hud_ammo2_pos && strcmp(hud_ammo2_pos->string, "0 0") != 0)
+	{
+		int x, y;
+		if (sscanf(hud_ammo2_pos->string, "%d %d", &x, &y) == 2)
+		{
+			ammo2X = x;
+			ammo2Y = y;
+		}
+	}
 
 	// Does weapon have any ammo at all?
 	if (m_pWeapon->iAmmoType > 0)
@@ -938,8 +983,9 @@ int CHudAmmo::Draw(float flTime)
 		if (pw->iClip >= 0)
 		{
 			// room for the number and the '|' and the current ammo
-			
-			x = ScreenWidth - (8 * AmmoWidth) - iIconWidth;
+			int x = ammo1X;
+			int y = ammo1Y;
+
 			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, pw->iClip, r, g, b);
 
 			wrect_t rc;
@@ -963,19 +1009,25 @@ int CHudAmmo::Draw(float flTime)
 			ScaleColors(r, g, b, a );
 			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmoType), r, g, b);		
 
+			int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top) / 8;
+			SPR_Set(m_pWeapon->hAmmo, r, g, b);
+			SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
+
 
 		}
 		else
 		{
+			int x = ammo1X;
+			int y = ammo1Y;
 			// SPR_Draw a bullets only line
-			x = ScreenWidth - 4 * AmmoWidth - iIconWidth;
 			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmoType), r, g, b);
-		}
 
-		// Draw the ammo Icon
-		int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top)/8;
-		SPR_Set(m_pWeapon->hAmmo, r, g, b);
-		SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
+
+			// Draw the ammo Icon
+			int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top) / 8;
+			SPR_Set(m_pWeapon->hAmmo, r, g, b);
+			SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
+		}
 	}
 
 	// Does weapon have seconday ammo?
@@ -986,8 +1038,8 @@ int CHudAmmo::Draw(float flTime)
 		// Do we have secondary ammo?
 		if ((pw->iAmmo2Type != 0) && (gWR.CountAmmo(pw->iAmmo2Type) > 0))
 		{
-			y -= gHUD.m_iFontHeight + gHUD.m_iFontHeight/4;
-			x = ScreenWidth - 4 * AmmoWidth - iIconWidth;
+			int x = ammo2X;
+			int y = ammo2Y;
 			x = gHUD.DrawHudNumber(x, y, iFlags|DHN_3DIGITS, gWR.CountAmmo(pw->iAmmo2Type), r, g, b);
 
 			// Draw the ammo Icon
