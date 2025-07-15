@@ -1,5 +1,5 @@
 #pragma once
-#include "net.h" // Äîäàéòå öåé ðÿäîê äëÿ NetSocket
+#include "net.h"
 
 class CHudTimer : public CHudBase
 {
@@ -10,12 +10,11 @@ public:
 
 	int MsgFunc_Timer(const char* name, int size, void* buf);
 	void Think();
-	// void SyncTimerLocal(float fTime); // Ìîæíà çàëèøèòè, ÿêùî º îêðåìà ðåàë³çàö³ÿ, àáî ³íòåãðóâàòè â SyncTimer
 
 private:
 	void SyncTimer(float fTime);
 	void DoResync();
-	void SyncTimerRemote(unsigned int ip, unsigned short port, float fTime, double latency); // Îãîëîøåííÿ íîâî¿ ôóíêö³¿
+	void SyncTimerRemote(unsigned int ip, unsigned short port, float fTime, double latency);
 
 	// Message data
 	int seconds_total;
@@ -25,7 +24,7 @@ private:
 
 	// Sync data
 	float m_flEndTime;
-	float m_flEffectiveTime; // Âèêîðèñòîâóºòüñÿ, ÿêùî m_flSynced == false
+	float m_flEffectiveTime; 
 	float m_flNextSyncTime;
 	bool m_flSynced;
 	bool m_bDelayTimeleftReading;
@@ -37,10 +36,9 @@ private:
 	cvar_t* m_pCvarMpTimelimit;
 	cvar_t* m_pCvarMpTimeleft;
 
-	// Íîâ³ çì³íí³ äëÿ A2S_RULES ñèíõðîí³çàö³¿
-	char m_szPacketBuffer[2048]; // Áóôåð äëÿ çáåðåæåííÿ â³äïîâ³ä³ (ìîæëèâî, ôðàãìåíòîâàíî¿)
-	int m_iReceivedSize;         // Çàãàëüíèé ðîçì³ð îòðèìàíî¿ â³äïîâ³ä³
-	int m_iResponceID;           // ID ïîòî÷íî¿ â³äïîâ³ä³ (äëÿ ôðàãìåíòîâàíèõ ïàêåò³â)
-	int m_iReceivedPackets;      // Á³òîâà ìàñêà îòðèìàíèõ ôðàãìåíòîâàíèõ ïàêåò³â
-	int m_iReceivedPacketsCount; // Ê³ëüê³ñòü îòðèìàíèõ ôðàãìåíòîâàíèõ ïàêåò³â
+	char m_szPacketBuffer[2048]; 
+	int m_iReceivedSize;         
+	int m_iResponceID;           
+	int m_iReceivedPackets;     
+	int m_iReceivedPacketsCount;
 };
