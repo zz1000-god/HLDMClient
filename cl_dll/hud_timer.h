@@ -1,5 +1,5 @@
 #pragma once
-#include "net.h" // Додайте цей рядок для NetSocket
+#include "net.h" // Г„Г®Г¤Г Г©ГІГҐ Г¶ГҐГ© Г°ГїГ¤Г®ГЄ Г¤Г«Гї NetSocket
 
 class CHudTimer : public CHudBase
 {
@@ -10,12 +10,12 @@ public:
 
 	int MsgFunc_Timer(const char* name, int size, void* buf);
 	void Think();
-	// void SyncTimerLocal(float fTime); // Можна залишити, якщо є окрема реалізація, або інтегрувати в SyncTimer
+	// void SyncTimerLocal(float fTime); // ГЊГ®Г¦Г­Г  Г§Г Г«ГЁГёГЁГІГЁ, ГїГЄГ№Г® Вє Г®ГЄГ°ГҐГ¬Г  Г°ГҐГ Г«ВіГ§Г Г¶ВіГї, Г ГЎГ® ВіГ­ГІГҐГЈГ°ГіГўГ ГІГЁ Гў SyncTimer
 
 private:
 	void SyncTimer(float fTime);
 	void DoResync();
-	void SyncTimerRemote(unsigned int ip, unsigned short port, float fTime, double latency); // Оголошення нової функції
+	void SyncTimerRemote(unsigned int ip, unsigned short port, float fTime, double latency); // ГЋГЈГ®Г«Г®ГёГҐГ­Г­Гї Г­Г®ГўГ®Вї ГґГіГ­ГЄГ¶ВіВї
 
 	// Message data
 	int seconds_total;
@@ -25,21 +25,22 @@ private:
 
 	// Sync data
 	float m_flEndTime;
-	float m_flEffectiveTime; // Використовується, якщо m_flSynced == false
+	float m_flEffectiveTime; // Г‚ГЁГЄГ®Г°ГЁГ±ГІГ®ГўГіВєГІГјГ±Гї, ГїГЄГ№Г® m_flSynced == false
 	float m_flNextSyncTime;
 	bool m_flSynced;
 	bool m_bDelayTimeleftReading;
 
 	// CVars
 	cvar_t* hud_timer;
+	cvar_t* hud_timer_height;
 	cvar_t* m_pCvarHudTimerSync;
 	cvar_t* m_pCvarMpTimelimit;
 	cvar_t* m_pCvarMpTimeleft;
 
-	// Нові змінні для A2S_RULES синхронізації
-	char m_szPacketBuffer[2048]; // Буфер для збереження відповіді (можливо, фрагментованої)
-	int m_iReceivedSize;         // Загальний розмір отриманої відповіді
-	int m_iResponceID;           // ID поточної відповіді (для фрагментованих пакетів)
-	int m_iReceivedPackets;      // Бітова маска отриманих фрагментованих пакетів
-	int m_iReceivedPacketsCount; // Кількість отриманих фрагментованих пакетів
+	// ГЌГ®ГўВі Г§Г¬ВіГ­Г­Ві Г¤Г«Гї A2S_RULES Г±ГЁГ­ГµГ°Г®Г­ВіГ§Г Г¶ВіВї
+	char m_szPacketBuffer[2048]; // ГЃГіГґГҐГ° Г¤Г«Гї Г§ГЎГҐГ°ГҐГ¦ГҐГ­Г­Гї ГўВіГ¤ГЇГ®ГўВіГ¤Ві (Г¬Г®Г¦Г«ГЁГўГ®, ГґГ°Г ГЈГ¬ГҐГ­ГІГ®ГўГ Г­Г®Вї)
+	int m_iReceivedSize;         // Г‡Г ГЈГ Г«ГјГ­ГЁГ© Г°Г®Г§Г¬ВіГ° Г®ГІГ°ГЁГ¬Г Г­Г®Вї ГўВіГ¤ГЇГ®ГўВіГ¤Ві
+	int m_iResponceID;           // ID ГЇГ®ГІГ®Г·Г­Г®Вї ГўВіГ¤ГЇГ®ГўВіГ¤Ві (Г¤Г«Гї ГґГ°Г ГЈГ¬ГҐГ­ГІГ®ГўГ Г­ГЁГµ ГЇГ ГЄГҐГІВіГў)
+	int m_iReceivedPackets;      // ГЃВіГІГ®ГўГ  Г¬Г Г±ГЄГ  Г®ГІГ°ГЁГ¬Г Г­ГЁГµ ГґГ°Г ГЈГ¬ГҐГ­ГІГ®ГўГ Г­ГЁГµ ГЇГ ГЄГҐГІВіГў
+	int m_iReceivedPacketsCount; // ГЉВіГ«ГјГЄВіГ±ГІГј Г®ГІГ°ГЁГ¬Г Г­ГЁГµ ГґГ°Г ГЈГ¬ГҐГ­ГІГ®ГўГ Г­ГЁГµ ГЇГ ГЄГҐГІВіГў
 };
