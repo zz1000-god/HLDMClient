@@ -12,7 +12,7 @@ int CHudSpeedometer::Init()
 
 	hud_speedometer = CVAR_CREATE("hud_speedometer", "0", FCVAR_ARCHIVE);
 	hud_speedometer_below_cross = CVAR_CREATE("hud_speedometer_below_cross", "0", FCVAR_ARCHIVE);
-	hud_speedometer_height = CVAR_CREATE("hud_speedometer_height", "0", FCVAR_ARCHIVE);
+	hud_speedometer_pos = CVAR_CREATE("hud_speedometer_pos", "0 0", FCVAR_ARCHIVE);
 
 	gHUD.AddHudElem(this);
 	return 0;
@@ -32,15 +32,29 @@ int CHudSpeedometer::Draw(float time)
 	UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
 
 	int y;
-	if (hud_speedometer_below_cross->value != 0.0f)
-		y = ScreenHeight / 2 + gHUD.m_iFontHeight / 2;
-	else if (hud_speedometer_height->value != 0.0f)
-		y = hud_speedometer_height->value;
+	int x = ScreenWidth / 2;
+	int customX = 0, customY = 0;
+	int useCustomPos = false;
+	if (hud_speedometer_pos && strcmp(hud_speedometer_pos->string, "0 0") != 0)
+	{
+		if (sscanf(hud_speedometer_pos->string, "%d %d", &customX, &customY) == 2)
+			useCustomPos = true;
+	}
+
+	if (useCustomPos) // default position
+	{
+		x = customX;
+		y = customY;
+	}
 	else
-		y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+	{
+		if (hud_speedometer_below_cross->value != 0.0f)
+			y = ScreenHeight / 2 + gHUD.m_iFontHeight / 2;
+		else
+			y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+	}
 
-
-	gHUD.DrawHudNumberCentered(ScreenWidth / 2, y, speed, r, g, b);
+	gHUD.DrawHudNumberCentered(x, y, speed, r, g, b);
 
 	return 0;
 }
