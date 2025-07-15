@@ -124,4 +124,7 @@ private:
 	int DrawDamage(float fTime);
 	void CalcDamageDirection(vec3_t vecFrom);
 	void UpdateTiles(float fTime, long bits);
+
+	cvar_t* hud_health_pos;
+	cvar_t* hud_health_bar;
 };	
