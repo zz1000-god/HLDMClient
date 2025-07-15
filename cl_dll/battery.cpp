@@ -33,6 +33,8 @@ int CHudBattery::Init(void)
 	m_fFade = 0;
 	m_iFlags = 0;
 
+	hud_battery_pos = CVAR_CREATE("hud_battery_pos", "0 0", FCVAR_ARCHIVE);
+
 	HOOK_MESSAGE(Battery);
 
 	gHUD.AddHudElem(this);
@@ -132,9 +134,25 @@ int CHudBattery::Draw(float flTime)
 	ScaleColors(r, g, b, a);
 
 	int iOffset = (m_prc1->bottom - m_prc1->top) / 6;
+	int customX = 0, customY = 0;
+	int useCustomPos = false;
+	if (hud_battery_pos && strcmp(hud_battery_pos->string, "0 0") != 0)
+	{
+		if (sscanf(hud_battery_pos->string, "%d %d", &customX, &customY) == 2)
+			useCustomPos = true;
+	}
 
-	y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
-	x = ScreenWidth / 5;
+	if (useCustomPos) // default position
+	{
+		x = customX;
+		y = customY;
+	}
+	else
+	{
+		y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+		x = ScreenWidth / 5;
+	}
+
 
 	// make sure we have the right sprite handles
 	if (!m_hSprite1)
