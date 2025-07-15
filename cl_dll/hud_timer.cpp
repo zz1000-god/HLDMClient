@@ -44,6 +44,7 @@ int CHudTimer::Init()
 	m_iFlags |= HUD_ACTIVE;
 	
 	hud_timer = CVAR_CREATE("hud_timer", "1", FCVAR_ARCHIVE);
+	hud_timer_height = CVAR_CREATE("hud_timer_height", "0", FCVAR_ARCHIVE);
 	m_pCvarHudTimerSync = CVAR_CREATE("hud_timer_sync", "1", FCVAR_ARCHIVE);
 	gHUD.AddHudElem(this);
 	
@@ -95,6 +96,9 @@ int CHudTimer::VidInit()
 
 int CHudTimer::Draw(float time)
 {
+    int y = gHUD.m_scrinfo.iCharHeight;
+    int x = ScreenWidth / 2;
+
 	if (gHUD.m_iHideHUDDisplay & HIDEHUD_ALL)
 		return 0;
 
@@ -112,7 +116,10 @@ int CHudTimer::Draw(float time)
 		
 		int r, g, b;
 		UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-		gHUD.DrawHudStringCentered(ScreenWidth / 2, gHUD.m_scrinfo.iCharHeight, str, r, g, b);
+        if (hud_timer_height->value > 0.0f) {
+            y = hud_timer_height->value;
+		}
+		gHUD.DrawHudStringCentered(x, y, str, r, g, b);
 		return 1;
 	}
 
@@ -142,7 +149,10 @@ int CHudTimer::Draw(float time)
 
 		int r, g, b;
 		UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-		gHUD.DrawHudStringCentered(ScreenWidth / 2, gHUD.m_scrinfo.iCharHeight, str, r, g, b);
+        if (hud_timer_height->value > 0.0f) {
+            y = hud_timer_height->value;
+		}
+		gHUD.DrawHudStringCentered(x, y, str, r, g, b);
 		return 1;
 	}
 	
@@ -165,7 +175,10 @@ int CHudTimer::Draw(float time)
 				strcpy(str, " ");
 				int r, g, b;
 				UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-				gHUD.DrawHudStringCentered(ScreenWidth / 2, gHUD.m_scrinfo.iCharHeight, str, r, g, b);
+                if (hud_timer_height->value > 0.0f) {
+                    y = hud_timer_height->value;
+				}
+				gHUD.DrawHudStringCentered(x, y, str, r, g, b);
 				return 1;
 			}
 
@@ -187,7 +200,10 @@ int CHudTimer::Draw(float time)
 
 		int r, g, b;
 		UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-		gHUD.DrawHudStringCentered(ScreenWidth / 2, gHUD.m_scrinfo.iCharHeight, str, r, g, b);
+        if (hud_timer_height->value > 0.0f) {
+            y = hud_timer_height->value;
+		}
+		gHUD.DrawHudStringCentered(x, y, str, r, g, b);
 		return 1;
 	}
 
@@ -229,7 +245,12 @@ int CHudTimer::Draw(float time)
 		UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
 	}
 	
-	gHUD.DrawHudStringCentered(ScreenWidth / 2, gHUD.m_scrinfo.iCharHeight, str, r, g, b);
+    if (hud_timer_height->value > 0.0f) {
+        y = hud_timer_height->value;
+    } else {
+        y = gHUD.m_scrinfo.iCharHeight; // Default position if no custom height is set
+	}
+	gHUD.DrawHudStringCentered(x, y, str, r, g, b);
 
 	return 1;
 }
