@@ -13,7 +13,8 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - Time left until map ends (`hud_timer 1`)
   - Time elapsed since map start (`hud_timer 2`)
   - Local personal timer (`hud_timer 3`)
--Added hud sprite position changing
+
+-Added hud sprite position changing:
   - `hud_ammo1_pos "x y"` change position of primary ammo, default "0 0" <- disabled
   - `hud_ammo2_pos "x y"` change position of secondary ammo, like grenades in mp5
   - `hud_health_pos "x y"` change position of health
