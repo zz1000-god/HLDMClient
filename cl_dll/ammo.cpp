@@ -873,17 +873,17 @@ int CHudAmmo::Draw(float flTime)
 	int a, x, y, r, g, b;
 	int AmmoWidth;
 
-	if (!(gHUD.m_iWeaponBits & (1<<(WEAPON_SUIT)) ))
+	if (!(gHUD.m_iWeaponBits & (1 << (WEAPON_SUIT))))
 		return 1;
 
-	if ( (gHUD.m_iHideHUDDisplay & ( HIDEHUD_WEAPONS | HIDEHUD_ALL )) )
+	if ((gHUD.m_iHideHUDDisplay & (HIDEHUD_WEAPONS | HIDEHUD_ALL)))
 		return 1;
 
 	// Draw Weapon Menu
 	DrawWList(flTime);
 
 	// Draw ammo pickup history
-	gHR.DrawAmmoHistory( flTime );
+	gHR.DrawAmmoHistory(flTime);
 
 	if (!(m_iFlags & HUD_ACTIVE))
 		return 0;
@@ -891,7 +891,7 @@ int CHudAmmo::Draw(float flTime)
 	if (!m_pWeapon)
 		return 0;
 
-	WEAPON *pw = m_pWeapon; // shorthand
+	WEAPON* pw = m_pWeapon; // shorthand
 
 	// SPR_Draw Ammo
 	//if ((pw->iAmmoType < 0) && (pw->iAmmo2Type < 0))
@@ -902,16 +902,16 @@ int CHudAmmo::Draw(float flTime)
 
 	AmmoWidth = gHUD.GetSpriteRect(gHUD.m_HUD_number_0).right - gHUD.GetSpriteRect(gHUD.m_HUD_number_0).left;
 
-	a = max<int>( MIN_ALPHA, m_fFade );
+	a = max<int>(MIN_ALPHA, m_fFade);
 
 	if (m_fFade > 0)
 		m_fFade -= (gHUD.m_flTimeDelta * 20);
 
-	UnpackRGB(r,g,b, gHUD.m_iDefaultHUDColor);
+	UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
 
-	ScaleColors(r, g, b, a );
+	ScaleColors(r, g, b, a);
 
-	y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight/2;
+	y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
 
 	int customX = 0, customY = 0;
 	int useCustomPos = false;
@@ -947,110 +947,82 @@ int CHudAmmo::Draw(float flTime)
 		SPR_DrawAdditive(0, x, y, &m_pWeapon->rcInactive);
 	}
 
-	int defaultY = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
-	int iIconWidth = m_pWeapon->rcAmmo.right - m_pWeapon->rcAmmo.left;
-	// Parse hud_ammo1_pos
-	int ammo1X = ScreenWidth - (8 * AmmoWidth) - iIconWidth;
-	int ammo1Y = defaultY;
+	int customX1 = 0, customY1 = 0;
+	int customX2 = 0, customY2 = 0;
+	bool useCustomPos1 = false, useCustomPos2 = false;
+
+	// Читання позиції з cvar hud_ammo1_pos
 	if (hud_ammo1_pos && strcmp(hud_ammo1_pos->string, "0 0") != 0)
 	{
-		int x, y;
-		if (sscanf(hud_ammo1_pos->string, "%d %d", &x, &y) == 2)
-		{
-			ammo1X = x;
-			ammo1Y = y;
-		}
+		if (sscanf(hud_ammo1_pos->string, "%d %d", &customX1, &customY1) == 2)
+			useCustomPos1 = true;
 	}
 
-	// Parse hud_ammo2_pos
-	int ammo2X = ScreenWidth - 4 * AmmoWidth;
-	int ammo2Y = defaultY - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 4;
+	// Читання позиції з cvar hud_ammo2_pos
 	if (hud_ammo2_pos && strcmp(hud_ammo2_pos->string, "0 0") != 0)
 	{
-		int x, y;
-		if (sscanf(hud_ammo2_pos->string, "%d %d", &x, &y) == 2)
-		{
-			ammo2X = x;
-			ammo2Y = y;
-		}
+		if (sscanf(hud_ammo2_pos->string, "%d %d", &customX2, &customY2) == 2)
+			useCustomPos2 = true;
 	}
+
 
 	// Does weapon have any ammo at all?
 	if (m_pWeapon->iAmmoType > 0)
 	{
+		int defaultY = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
 		int iIconWidth = m_pWeapon->rcAmmo.right - m_pWeapon->rcAmmo.left;
-		
+
+		int x = useCustomPos1 ? customX1 : ScreenWidth - (8 * AmmoWidth) - iIconWidth;
+		int y = useCustomPos1 ? customY1 : defaultY; // defaultY = початкове положення
+
 		if (pw->iClip >= 0)
 		{
-			// room for the number and the '|' and the current ammo
-			int x = ammo1X;
-			int y = ammo1Y;
-
 			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, pw->iClip, r, g, b);
 
-			wrect_t rc;
-			rc.top = 0;
-			rc.left = 0;
-			rc.right = AmmoWidth;
-			rc.bottom = 100;
+			wrect_t rc = { 0, 0, AmmoWidth, 100 };
+			int iBarWidth = AmmoWidth / 10;
+			x += AmmoWidth / 2;
 
-			int iBarWidth =  AmmoWidth/10;
-
-			x += AmmoWidth/2;
-
-			UnpackRGB(r,g,b, gHUD.m_iDefaultHUDColor);
-
-			// draw the | bar
+			UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
 			FillRGBA(x, y, iBarWidth, gHUD.m_iFontHeight, r, g, b, a);
+			x += iBarWidth + AmmoWidth / 2;
 
-			x += iBarWidth + AmmoWidth/2;;
-
-			// GL Seems to need this
-			ScaleColors(r, g, b, a );
-			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmoType), r, g, b);		
-
-			int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top) / 8;
-			SPR_Set(m_pWeapon->hAmmo, r, g, b);
-			SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
-
-
+			ScaleColors(r, g, b, a);
+			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmoType), r, g, b);
 		}
 		else
 		{
-			int x = ammo1X;
-			int y = ammo1Y;
-			// SPR_Draw a bullets only line
+			x = useCustomPos1 ? customX1 : ScreenWidth - 4 * AmmoWidth - iIconWidth;
+			y = useCustomPos1 ? customY1 : defaultY;
 			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmoType), r, g, b);
-
-
-			// Draw the ammo Icon
-			int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top) / 8;
-			SPR_Set(m_pWeapon->hAmmo, r, g, b);
-			SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
 		}
+
+		// Іконка
+		int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top) / 8;
+		SPR_Set(m_pWeapon->hAmmo, r, g, b);
+		SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
 	}
 
-	// Does weapon have seconday ammo?
-	if (pw->iAmmo2Type > 0) 
+	// Вторинні боєприпаси
+	if (pw->iAmmo2Type > 0)
 	{
-		int iIconWidth = m_pWeapon->rcAmmo2.right - m_pWeapon->rcAmmo2.left;
-
-		// Do we have secondary ammo?
-		if ((pw->iAmmo2Type != 0) && (gWR.CountAmmo(pw->iAmmo2Type) > 0))
+		if (gWR.CountAmmo(pw->iAmmo2Type) > 0)
 		{
-			int x = ammo2X;
-			int y = ammo2Y;
-			x = gHUD.DrawHudNumber(x, y, iFlags|DHN_3DIGITS, gWR.CountAmmo(pw->iAmmo2Type), r, g, b);
+			int defaultY = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+			int iIconWidth = m_pWeapon->rcAmmo2.right - m_pWeapon->rcAmmo2.left;
 
-			// Draw the ammo Icon
+			int x = useCustomPos2 ? customX2 : ScreenWidth - 4 * AmmoWidth - iIconWidth;
+			int y = useCustomPos2 ? customY2 : defaultY - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 4;
+
+			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmo2Type), r, g, b);
+
 			SPR_Set(m_pWeapon->hAmmo2, r, g, b);
-			int iOffset = (m_pWeapon->rcAmmo2.bottom - m_pWeapon->rcAmmo2.top)/8;
+			int iOffset = (m_pWeapon->rcAmmo2.bottom - m_pWeapon->rcAmmo2.top) / 8;
 			SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo2);
 		}
 	}
-	return 1;
+	return 0;
 }
-
 
 //
 // Draws the ammo bar on the hud
