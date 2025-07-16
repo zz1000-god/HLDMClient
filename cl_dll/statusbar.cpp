@@ -1,5 +1,3 @@
-// statusbar.cpp з підтримкою кольорових тегів ^1–^9 та центрованим вирівнюванням
-
 #include "hud.h"
 #include "cl_util.h"
 #include "parsemsg.h"
@@ -111,6 +109,43 @@ void CHudStatusBar::ParseStatusString(int line_num)
 	*dst = '\0';
 }
 
+bool AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
+{
+	char* original = text;
+	char lastColorTag[3] = "";
+	bool onlyTags = true;
+
+	while (*text)
+	{
+		if (*text == '^' && isdigit(*(text + 1)) && *(text + 1) != '0')
+		{
+			lastColorTag[0] = *text;
+			lastColorTag[1] = *(text + 1);
+			lastColorTag[2] = '\0';
+			text += 2;
+		}
+		else if (isspace(*text))
+		{
+			++text;
+		}
+		else
+		{
+			onlyTags = false;
+			break;
+		}
+	}
+
+	if (onlyTags)
+	{
+		// РІСЃС‚Р°РІР»СЏС”РјРѕ Player РїС–СЃР»СЏ РѕСЃС‚Р°РЅРЅСЊРѕРіРѕ С‚РµРіСѓ
+		strncat(original, lastColorTag, maxLen - strlen(original) - 1);
+		strncat(original, "Player", maxLen - strlen(original) - 1);
+		return true;
+	}
+
+	return false;
+}
+
 int CHudStatusBar::Draw(float fTime)
 {
 	if (m_bReparseString)
@@ -131,6 +166,8 @@ int CHudStatusBar::Draw(float fTime)
 		int y = Y_START - (4 + 13 * i);
 		char* text = m_szStatusBar[i];
 		if (!text[0]) continue;
+
+		AppendPlayerIfOnlyColorTags(text, sizeof(m_szStatusBar[i]));
 
 		int totalWidth = 0, textHeight = 13;
 		color_tags::for_each_colored_substr(text, [&](const char* str, bool, int, int, int) {
