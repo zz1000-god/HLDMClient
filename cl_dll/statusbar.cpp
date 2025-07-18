@@ -160,40 +160,42 @@ int CHudStatusBar::Draw(float fTime)
 
 	int Y_START = ScreenHeight - 52;
 
+	// Draw the status bar lines
 	for (int i = 0; i < MAX_STATUSBAR_LINES; i++)
 	{
-		int baseX = 8;
-		int y = Y_START - (4 + 13 * i);
 		char* text = m_szStatusBar[i];
+		char plainText[MAX_STATUSTEXT_LENGTH] = { 0 };
+		int TextHeight = 0, TextWidth = 0;
+
+		color_tags::strip_color_tags(plainText, text, sizeof(plainText));
+
+		GetConsoleStringSize(plainText, &TextWidth, &TextHeight);
+
+		int x = 8;
+		int y = Y_START - (4 + TextHeight * i); // draw along bottom of screen
 		if (!text[0]) continue;
 
 		AppendPlayerIfOnlyColorTags(text, sizeof(m_szStatusBar[i]));
 
-		int totalWidth = 0, textHeight = 13;
-		color_tags::for_each_colored_substr(text, [&](const char* str, bool, int, int, int) {
-			int w, h;
-			GetConsoleStringSize((char*)str, &w, &h);
-			totalWidth += w;
-			textHeight = h;
-			});
-
-		if ((i == STATUSBAR_ID_LINE) && CVAR_GET_FLOAT("hud_centerid")) {
-			baseX = max(0, max(2, (ScreenWidth - totalWidth)) / 2);
-			y = (ScreenHeight / 2) + (textHeight * CVAR_GET_FLOAT("hud_centerid"));
+		// let user set status ID bar centering
+		if ((i == STATUSBAR_ID_LINE) && CVAR_GET_FLOAT("hud_centerid"))
+		{
+			x = max(0, max(2, (ScreenWidth - TextWidth)) / 2);
+			y = (ScreenHeight / 2) + (TextHeight * CVAR_GET_FLOAT("hud_centerid"));
 		}
 
-		int x = baseX;
-		color_tags::for_each_colored_substr(text, [=, &x](const char* str, bool customColor, int r, int g, int b) mutable {
-			if (customColor)
-				gEngfuncs.pfnDrawSetTextColor(r / 255.0f, g / 255.0f, b / 255.0f);
-			else
-				gEngfuncs.pfnDrawSetTextColor(g_ColorYellow[0], g_ColorYellow[1], g_ColorYellow[2]);
-
-			DrawConsoleString(x, y, (char*)str);
-			int w, h;
-			GetConsoleStringSize((char*)str, &w, &h);
-			x += w;
-			});
+		if (text)
+			gHUD.DrawConsoleStringWithColorTags(
+				x,
+				y,
+				text,
+				true,
+				m_pflNameColors[i][0],
+				m_pflNameColors[i][1],
+				m_pflNameColors[i][2]
+			);
+		else
+			DrawConsoleString(x, y, text);
 	}
 
 	return 1;
