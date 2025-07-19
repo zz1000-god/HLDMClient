@@ -43,6 +43,43 @@ void CHudStatusBar::Reset(void)
 		m_pflNameColors[i] = g_ColorYellow;
 }
 
+bool AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
+{
+	char* original = text;
+	char lastColorTag[3] = "";
+	bool onlyTags = true;
+
+	while (*text)
+	{
+		if (*text == '^' && isdigit(*(text + 1)) && *(text + 1) != '0')
+		{
+			lastColorTag[0] = *text;
+			lastColorTag[1] = *(text + 1);
+			lastColorTag[2] = '\0';
+			text += 2;
+		}
+		else if (isspace(*text))
+		{
+			++text;
+		}
+		else
+		{
+			onlyTags = false;
+			break;
+		}
+	}
+
+	if (onlyTags)
+	{
+		// вставляємо Player після останнього тегу
+		strncat(original, lastColorTag, maxLen - strlen(original) - 1);
+		strncat(original, "Player", maxLen - strlen(original) - 1);
+		return true;
+	}
+
+	return false;
+}
+
 void CHudStatusBar::ParseStatusString(int line_num)
 {
 	char szBuffer[MAX_STATUSTEXT_LENGTH] = { 0 };
@@ -89,6 +126,9 @@ void CHudStatusBar::ParseStatusString(int line_num)
 							if (g_PlayerInfoList[indexval].name)
 							{
 								strncpy(szRepString, g_PlayerInfoList[indexval].name, MAX_PLAYER_NAME_LENGTH);
+
+								AppendPlayerIfOnlyColorTags(szRepString, MAX_PLAYER_NAME_LENGTH);
+
 								m_pflNameColors[line_num] = GetClientColor(indexval);
 							}
 							else strcpy(szRepString, "******");
@@ -107,43 +147,6 @@ void CHudStatusBar::ParseStatusString(int line_num)
 		else { while (*src && *src != '\n') src++; }
 	}
 	*dst = '\0';
-}
-
-bool AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
-{
-	char* original = text;
-	char lastColorTag[3] = "";
-	bool onlyTags = true;
-
-	while (*text)
-	{
-		if (*text == '^' && isdigit(*(text + 1)) && *(text + 1) != '0')
-		{
-			lastColorTag[0] = *text;
-			lastColorTag[1] = *(text + 1);
-			lastColorTag[2] = '\0';
-			text += 2;
-		}
-		else if (isspace(*text))
-		{
-			++text;
-		}
-		else
-		{
-			onlyTags = false;
-			break;
-		}
-	}
-
-	if (onlyTags)
-	{
-		// вставляємо Player після останнього тегу
-		strncat(original, lastColorTag, maxLen - strlen(original) - 1);
-		strncat(original, "Player", maxLen - strlen(original) - 1);
-		return true;
-	}
-
-	return false;
 }
 
 int CHudStatusBar::Draw(float fTime)
@@ -173,9 +176,6 @@ int CHudStatusBar::Draw(float fTime)
 
 		int x = 8;
 		int y = Y_START - (4 + TextHeight * i); // draw along bottom of screen
-		if (!text[0]) continue;
-
-		AppendPlayerIfOnlyColorTags(text, sizeof(m_szStatusBar[i]));
 
 		// let user set status ID bar centering
 		if ((i == STATUSBAR_ID_LINE) && CVAR_GET_FLOAT("hud_centerid"))
