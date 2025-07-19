@@ -1,4 +1,4 @@
-﻿/***
+/***
 *
 *	Copyright (c) 1996-2002, Valve LLC. All rights reserved.
 *	
@@ -198,7 +198,12 @@ int CHudSayText :: MsgFunc_SayText( const char *pszName, int iSize, void *pbuf )
 
 void CHudSayText :: SayTextPrint( const char *pszBuf, int iBufSize, int clientIndex )
 {
-	ConsolePrint( pszBuf );
+	if (gViewPort && gViewPort->AllowedToPrintText() == FALSE)
+	{
+		// Print it straight to the console
+		ConsolePrint(pszBuf);
+		return;
+	}
 
 	int i;
 	// find an empty string slot
@@ -236,6 +241,8 @@ void CHudSayText :: SayTextPrint( const char *pszBuf, int iBufSize, int clientIn
 	}
 
 	strncpy( g_szLineBuffer[i], pszBuf, max(iBufSize , MAX_CHARS_PER_LINE) );
+
+	ConsolePrint(g_szLineBuffer[i]);
 
 	// make sure the text fits in one line
 	EnsureTextFitsInOneLineAndWrapIfHaveTo( i );
