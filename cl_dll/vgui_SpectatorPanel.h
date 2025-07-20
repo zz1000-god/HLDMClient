@@ -27,7 +27,7 @@ using namespace vgui;
 #define BANNER_WIDTH	256
 #define BANNER_HEIGHT	64
 
-#define OPTIONS_BUTTON_X 96
+#define OPTIONS_BUTTON_X 200
 #define CAMOPTIONS_BUTTON_X 200
 
 
