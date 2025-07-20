@@ -100,7 +100,7 @@ void SpectatorPanel::Initialize()
 	m_TopBorder = new CTransparentPanel(64, 0, 0, ScreenWidth, YRES_HD(PANEL_HEIGHT));
 	//m_TopBorder->setParent(this);
 
-	m_BottomBorder = new CTransparentPanel(0, 0, ScreenHeight - YRES_HD( PANEL_HEIGHT ), ScreenWidth, YRES_HD( PANEL_HEIGHT ) );
+	m_BottomBorder = new CTransparentPanel(255, 0, ScreenHeight - PANEL_HEIGHT, ScreenWidth, PANEL_HEIGHT );
 	m_BottomBorder->setParent(this);
 
 	setPaintBackgroundEnabled(false);
@@ -168,7 +168,7 @@ void SpectatorPanel::Initialize()
 	m_CamButton->setArmedColor ( 194, 202, 54, 0 );
 
 //	m_PrevPlayerButton= new ColorButton("<", XRES_HD( 15 + OPTIONS_BUTTON_X + 15 ), YRES_HD(6), XRES_HD(24), YRES_HD(20), false, false );
-	m_PrevPlayerButton= new CImageButton("arrowleft", XRES_HD( 15 + OPTIONS_BUTTON_X + 15 ), YRES_HD(6), XRES_HD(24), YRES_HD(20), false, false );
+	m_PrevPlayerButton= new CImageButton("arrowleft", XRES(PREV_BUTTON_X), YRES_HD(6), XRES(PREVNEXT_BUTTON_WIDTH), YRES_HD(20), false, false );
 	m_PrevPlayerButton->setParent( m_BottomBorder );
 	m_PrevPlayerButton->setContentAlignment( vgui::Label::a_center );
 	m_PrevPlayerButton->setBoundKey( (char)255 );	// special no bound to avoid leading spaces in name 
@@ -179,7 +179,7 @@ void SpectatorPanel::Initialize()
 	m_PrevPlayerButton->setArmedColor ( 194, 202, 54, 0 );
 
 //	m_NextPlayerButton= new ColorButton(">", (ScreenWidth - (XRES_HD ( CAMOPTIONS_BUTTON_X ) + 15)) - XRES_HD ( 24 + 15 ), YRES_HD(6), XRES_HD(24), YRES_HD(20),false, false );
-	m_NextPlayerButton= new CImageButton("arrowright", ScreenWidth - XRES_HD( CAMOPTIONS_BUTTON_X + 15) - XRES_HD( 24 + 15 ), YRES_HD(6), XRES_HD(24), YRES_HD(20), false, false );
+	m_NextPlayerButton= new CImageButton("arrowright", XRES(NEXT_BUTTON_X), YRES_HD(6), XRES(PREVNEXT_BUTTON_WIDTH), YRES_HD(20), false, false );
 	m_NextPlayerButton->setParent( m_BottomBorder );
 	m_NextPlayerButton->setContentAlignment( vgui::Label::a_center );
 	m_NextPlayerButton->setBoundKey( (char)255 );	// special no bound to avoid leading spaces in name 
@@ -194,7 +194,7 @@ void SpectatorPanel::Initialize()
 	float flLabelSize = ScreenWidth - XRES_HD( CAMOPTIONS_BUTTON_X + 15 ) - XRES_HD( 24 + 15 ) - XRES_HD( (15 + OPTIONS_BUTTON_X + 15) + 38 );
 
 	m_BottomMainButton = new DropDownButton("Spectator Bottom", 
-		 XRES_HD( ( 15 + OPTIONS_BUTTON_X + 15 ) + 31 ), YRES_HD(6), flLabelSize, YRES_HD(20), 
+		XRES(MAIN_LABEL_X), YRES_HD(6), XRES(MAIN_LABEL_WIDTH), YRES_HD(20),
 		false, false );
 
 	m_BottomMainButton->setParent(m_BottomBorder);
@@ -209,9 +209,12 @@ void SpectatorPanel::Initialize()
 	m_BottomMainButton->setUnArmedColor ( 143, 143, 54, 0 );
 	m_BottomMainButton->setArmedColor ( 194, 202, 54, 0 );
 
+	m_BottomMainLabelBackground = new CTransparentPanel(128, XRES(MAIN_LABEL_X), YRES_HD(6), XRES(MAIN_LABEL_WIDTH), YRES_HD(20));
+	m_BottomMainLabelBackground->setParent(m_BottomBorder);
+
 
 	m_BottomMainLabel = new Label("Spectator Bottom", 
-		 XRES_HD( ( 15 + OPTIONS_BUTTON_X + 15 ) + 31 ), YRES_HD(6), flLabelSize, YRES_HD(20));
+		XRES(MAIN_LABEL_X), YRES_HD(6), XRES(MAIN_LABEL_WIDTH), YRES_HD(20));
 
 	m_BottomMainLabel->setParent(m_BottomBorder);
 	m_BottomMainLabel->setPaintBackgroundEnabled(false);
@@ -256,16 +259,22 @@ void SpectatorPanel::ShowMenu(bool isVisible)
 	{
 		int iLabelSizeX, iLabelSizeY;
 		m_BottomMainLabel->setVisible(true);
+		m_BottomMainLabelBackground->setVisible(true);
 		m_BottomMainButton->setVisible(false);
 
 		m_BottomMainLabel->getSize( iLabelSizeX, iLabelSizeY );
 		m_BottomMainLabel->setPos( ( ScreenWidth / 2 ) - (iLabelSizeX/2), YRES_HD(6) );
+
+		m_BottomBorder->setTransparency(255);
 	}
 	else
 	{
-		m_BottomMainButton->setPos( XRES_HD( ( 15 + OPTIONS_BUTTON_X + 15 ) + 31 ), YRES_HD(6) );
+		//m_BottomMainButton->setPos( XRES_HD( ( 15 + OPTIONS_BUTTON_X + 15 ) + 31 ), YRES_HD(6) );
 		m_BottomMainLabel->setVisible(false);
+		m_BottomMainLabelBackground->setVisible(false);
 		m_BottomMainButton->setVisible(true);
+
+		m_BottomBorder->setTransparency(64);
 	}
 
 	if ( !isVisible )
