@@ -37,6 +37,10 @@ using namespace vgui;
 #define MAIN_LABEL_X (640 / 3.0f)
 #define MAIN_LABEL_WIDTH (640 / 3.0f)
 
+#define PREVNEXT_BUTTON_WIDTH 24
+#define PREV_BUTTON_X (MAIN_LABEL_X - PREVNEXT_BUTTON_WIDTH - 7)
+#define NEXT_BUTTON_X (MAIN_LABEL_X + MAIN_LABEL_WIDTH + 7)
+
 
 #define TEAM_NUMBER 2
 
