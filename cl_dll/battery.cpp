@@ -150,7 +150,8 @@ int CHudBattery::Draw(float flTime)
 	else
 	{
 		y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
-		x = ScreenWidth / 5;
+		//x = ScreenWidth / 5;
+		x = 10 * gHUD.GetSpriteRect(gHUD.m_HUD_number_0).GetWidth();
 	}
 
 
@@ -170,7 +171,11 @@ int CHudBattery::Draw(float flTime)
 	}
 
 	x += (m_prc1->right - m_prc1->left);
-	x = gHUD.DrawHudNumber(x, y, DHN_3DIGITS | DHN_DRAWZERO, m_iBat, r, g, b);
+
+	if (m_iBat < 1000)
+		x = gHUD.DrawHudNumber(x, y, DHN_3DIGITS | DHN_DRAWZERO, m_iBat, r, g, b);
+	else
+		x = gHUD.DrawHudNumber(x, y, m_iBat, r, g, b);
 
 	return 1;
 }
