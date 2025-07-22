@@ -310,6 +310,17 @@ public:
 	int m_bitsValidSlots;
 	float m_flShutoffTime;
 	int m_fWaitingForMore;
+
+	bool OnWeaponSlotSelected(int slotIdx);
+	bool OnKeyPressed(int keynum);
+	void CloseMenu(void);
+	int GetStartY(int lineCount, int lineHeight);
+
+	float m_flMenuCloseTime;
+
+	cvar_t* hud_menu_fkeys;
+	cvar_t* hud_menu_fkeys_cooldown;
+
 };
 
 //
