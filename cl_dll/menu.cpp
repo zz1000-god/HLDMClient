@@ -17,15 +17,17 @@
 //
 // generic menu handler
 //
+#define NOMINMAX 
 #include "hud.h"
 #include "cl_util.h"
 #include "parsemsg.h"
-#include <keydefs.h>
 
 #include <string.h>
 #include <stdio.h>
+#include <keydefs.h>
 
 #include "vgui_TeamFortressViewport.h"
+#include <string_view>
 
 #define MAX_MENU_STRING	512
 char g_szMenuString[MAX_MENU_STRING];
@@ -42,7 +44,7 @@ int CHudMenu::Init(void)
 	HOOK_MESSAGE(ShowMenu);
 
 	// Register console variables
-	hud_menu_fkeys = CVAR_CREATE("hud_menu_fkeys", "1", FCVAR_ARCHIVE);
+	hud_menu_fkeys = CVAR_CREATE("hud_menu_fkeys", "0", FCVAR_ARCHIVE);
 	hud_menu_fkeys_cooldown = CVAR_CREATE("hud_menu_fkeys_cooldown", "1.5", FCVAR_ARCHIVE);
 
 	InitHUDData();
@@ -226,25 +228,23 @@ int CHudMenu::Draw(float flTime)
 			// Enhanced F-key display logic
 			if (hud_menu_fkeys->value && !menu_ralign)
 			{
-				// Look for menu items that start with numbers and prepend 'F'
-				size_t firstNonSpace = 0;
-				while (firstNonSpace < strlen(menubuf) && (menubuf[firstNonSpace] == ' ' || menubuf[firstNonSpace] == '\t'))
-					firstNonSpace++;
-
-				if (firstNonSpace < sizeof(menubuf) - 2 && firstNonSpace < 16)
+				// Prepend menu items with 'F'
+				// Only check first 16 chars to reduce false number detection
+				std::string_view menubufView(menubuf, std::min(strlen(menubuf), size_t(16)));
+				size_t firstNonSpace = menubufView.find_first_not_of(" \t");
+				if (firstNonSpace != std::string_view::npos && firstNonSpace <= sizeof(menubuf) - 2)
 				{
-					// Check if first non-space char is a digit and next one isn't
+					// First char is a digit and next one isn't
 					if (menubuf[firstNonSpace] >= '0' && menubuf[firstNonSpace] <= '9' &&
 						!(menubuf[firstNonSpace + 1] >= '0' && menubuf[firstNonSpace + 1] <= '9'))
 					{
 						int digit = menubuf[firstNonSpace] - '0';
-						int shift = (digit == 0) ? 2 : 1;
+						int shift = digit == 0 ? 2 : 1;
 
-						// Shift the string to make room for 'F' prefix
-						memmove(menubuf + firstNonSpace + shift, menubuf + firstNonSpace,
-							sizeof(menubuf) - firstNonSpace - shift);
+						// Shift the string by 1/2 chars
+						memmove(menubuf + firstNonSpace + shift, menubuf + firstNonSpace, sizeof(menubuf) - firstNonSpace - shift);
 
-						// Set the 'F' prefix
+						// Set the char
 						if (digit == 0)
 						{
 							menubuf[firstNonSpace] = 'F';
@@ -254,13 +254,9 @@ int CHudMenu::Draw(float flTime)
 						{
 							menubuf[firstNonSpace] = 'F';
 						}
-
-						// Ensure null termination
-						menubuf[sizeof(menubuf) - 1] = '\0';
 					}
 				}
 			}
-
 			if (menu_ralign)
 			{
 				// IMPORTANT: Right-to-left rendered text does not parse escape tokens!
@@ -291,6 +287,9 @@ bool CHudMenu::OnWeaponSlotSelected(int slotIdx)
 
 bool CHudMenu::OnKeyPressed(int keynum)
 {
+	if (!m_fMenuDisplayed)
+		return false;
+
 	if (!hud_menu_fkeys->value)
 		return false;
 	
