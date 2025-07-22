@@ -8,8 +8,9 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 
 ### 🎨 HUD Enhancements
 - Added support for color tags
-- Added support for change HUD coolor (`hud_color "255 160 0"`).
+- Added support for change HUD coolor (`hud_color "255 160 0"`)
 - Added speedometer toggle with `hud_speedometer 1` , `0`
+- Added using F1 - F10 keys for HUD menus (`hud_menu_fkeys 1`)
 - Added timers:
   - Time left until map ends (`hud_timer 1`)
   - Time elapsed since map start (`hud_timer 2`)
