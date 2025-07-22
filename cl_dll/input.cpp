@@ -283,7 +283,7 @@ struct kbutton_s CL_DLLEXPORT *KB_Find( const char *name )
 	p = g_kbkeys;
 	while ( p )
 	{
-		if ( !stricmp( name, p->name ) )
+		if ( !_stricmp( name, p->name ) )
 			return p->pkey;
 
 		p = p->next;
@@ -438,8 +438,13 @@ int CL_DLLEXPORT HUD_Key_Event( int down, int keynum, const char *pszCurrentBind
 {
 //	RecClKeyEvent(down, keynum, pszCurrentBinding);
 
-	if (gViewPort)
-		return gViewPort->KeyInput(down, keynum, pszCurrentBinding);
+	//if (gViewPort)
+		//return gViewPort->KeyInput(down, keynum, pszCurrentBinding);
+	if (gViewPort && !gViewPort->KeyInput(down, keynum, pszCurrentBinding))
+		return 0;
+
+	if (down && gHUD.m_Menu.OnKeyPressed(keynum))
+		return 0;
 	
 	return 1;
 }
