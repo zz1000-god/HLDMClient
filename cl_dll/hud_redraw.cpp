@@ -266,6 +266,13 @@ int CHud :: DrawHudNumberString( int xpos, int ypos, int iMinX, int iNumber, int
 
 }
 
+int CHud::DrawHudNumberStringFixed(int xpos, int ypos, int iNumber, int r, int g, int b)
+{
+	char szString[32];
+	sprintf(szString, "%d", iNumber);
+	return DrawHudStringRightAligned(xpos, ypos, szString, r, g, b);
+}
+
 // draws a string from right to left (right-aligned)
 int CHud :: DrawHudStringReverse( int xpos, int ypos, int iMinX, char *szString, int r, int g, int b )
 {
