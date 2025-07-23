@@ -32,7 +32,6 @@
 #include "vgui_ScorePanel.h"
 #include "useslowdown.h"
 #include "forcemodel.h"
-#include "crashhandler.h"
 
 hud_player_info_t	 g_PlayerInfoList[MAX_PLAYERS+1];	   // player info from the engine
 extra_player_info_t  g_PlayerExtraInfo[MAX_PLAYERS+1];   // additional player info sent directly to the client dll
@@ -395,12 +394,12 @@ void CHud :: Init( void )
 	m_Crosshairs.Init();
 	m_Timer.Init();
 	m_Scores.Init();
+	m_OldScoreBoard.Init();
 
 	GetClientVoiceMgr()->Init(&g_VoiceStatusHelper, (vgui::Panel**)&gViewPort);
 
 	m_Menu.Init();
 	
-	InstallCrashHandler();
 	ServersInit();
 
 	MsgFunc_ResetHUD(0, 0, NULL );
@@ -562,6 +561,7 @@ void CHud :: VidInit( void )
 	m_Crosshairs.VidInit();
 	m_Timer.VidInit();
 	m_Scores.VidInit();
+	m_OldScoreBoard.VidInit();
 }
 
 int CHud::MsgFunc_Logo(const char *pszName,  int iSize, void *pbuf)
@@ -633,7 +633,7 @@ int HUD_IsGame( const char *game )
 	if ( gamedir && gamedir[0] )
 	{
 		COM_FileBase( gamedir, gd );
-		if ( !stricmp( gd, game ) )
+		if ( !_stricmp( gd, game ) )
 			return 1;
 	}
 	return 0;
