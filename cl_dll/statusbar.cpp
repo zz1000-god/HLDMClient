@@ -51,14 +51,16 @@ bool AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
 
 	while (*text)
 	{
-		if (*text == '^' && isdigit(*(text + 1)) && *(text + 1) != '0')
+		unsigned char c = (unsigned char)*text;
+
+		if (c == '^' && isdigit((unsigned char)*(text + 1)) && *(text + 1) != '0')
 		{
 			lastColorTag[0] = *text;
 			lastColorTag[1] = *(text + 1);
 			lastColorTag[2] = '\0';
 			text += 2;
 		}
-		else if (isspace(*text))
+		else if (c <= 32)
 		{
 			++text;
 		}
@@ -71,7 +73,6 @@ bool AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
 
 	if (onlyTags)
 	{
-		// вставляємо Player після останнього тегу
 		strncat(original, lastColorTag, maxLen - strlen(original) - 1);
 		strncat(original, "Player", maxLen - strlen(original) - 1);
 		return true;
@@ -79,6 +80,7 @@ bool AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
 
 	return false;
 }
+
 
 void CHudStatusBar::ParseStatusString(int line_num)
 {
@@ -167,6 +169,7 @@ int CHudStatusBar::Draw(float fTime)
 	for (int i = 0; i < MAX_STATUSBAR_LINES; i++)
 	{
 		char* text = m_szStatusBar[i];
+
 		char plainText[MAX_STATUSTEXT_LENGTH] = { 0 };
 		int TextHeight = 0, TextWidth = 0;
 
