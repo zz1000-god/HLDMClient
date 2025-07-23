@@ -60,6 +60,7 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - `cl_scores 2` — shows top 2 players
   - `cl_scores_pos "x y"`
 - Scoreboard now shows each player's model name
+- Added `cl_old_scoreboard 1` like in OpenAG
 
 ### 🌟 Extended Sprites
 - Support for larger sprites like HL25
