@@ -1399,11 +1399,22 @@ void TeamFortressViewport::ShowScoreBoard( void )
 	if (m_pScoreBoard)
 	{
 		// No Scoreboard in single-player
-		if ( gEngfuncs.GetMaxClients() > 1 )
+		/*if (gEngfuncs.GetMaxClients() > 1)
 		{
 			m_pScoreBoard->Open();
 			UpdateCursorState();
+		}*/
+		if (gHUD.m_pCvarOldScoreboard->value != 0)
+		{
+			m_pScoreBoard->setVisible(false);
+			gHUD.m_OldScoreBoard.ShowScoreboard(true);
 		}
+		else
+		{
+			gHUD.m_OldScoreBoard.ShowScoreboard(false);
+			m_pScoreBoard->Open();
+		}
+		UpdateCursorState(); // just to be sure I guess
 	}
 }
 
@@ -1413,7 +1424,13 @@ void TeamFortressViewport::ShowScoreBoard( void )
 bool TeamFortressViewport::IsScoreBoardVisible( void )
 {
 	if (m_pScoreBoard)
-		return m_pScoreBoard->isVisible();
+		//return m_pScoreBoard->isVisible();
+	{
+		if (gHUD.m_pCvarOldScoreboard->value != 0)
+			return gHUD.m_OldScoreBoard.IsVisible();
+		else
+			return m_pScoreBoard->isVisible();
+	}
 
 	return false;
 }
@@ -1430,6 +1447,7 @@ void TeamFortressViewport::HideScoreBoard( void )
 	if (m_pScoreBoard)
 	{
 		m_pScoreBoard->setVisible(false);
+		gHUD.m_OldScoreBoard.ShowScoreboard(false);
 
 		GetClientVoiceMgr()->StopSquelchMode();
 
@@ -2480,7 +2498,7 @@ int TeamFortressViewport::MsgFunc_TeamScore( const char *pszName, int iSize, voi
 	int i;
 	for ( i = 1; i <= m_pScoreBoard->m_iNumTeams; i++ )
 	{
-		if ( !stricmp( TeamName, g_TeamInfo[i].name ) )
+		if ( !_stricmp( TeamName, g_TeamInfo[i].name ) )
 			break;
 	}
 
