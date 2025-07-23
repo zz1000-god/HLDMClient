@@ -95,7 +95,7 @@ struct HUDLIST {
 #include "hud_crosshairs.h"
 #include "hud_timer.h"
 #include "hud_scores.h"
-#include "egg.h"
+#include "hud_oldscoreboard.h"
 
 //
 //-----------------------------------------------------
@@ -598,6 +598,7 @@ public:
 	cvar_t* m_pCvarColor;
 	cvar_t* m_pCvarHideCorpses;
 	cvar_t* cl_sprite;
+	cvar_t* m_pCvarOldScoreboard;
 
 	unsigned long m_iDefaultHUDColor;
 	void UpdateDefaultHUDColor();
@@ -665,6 +666,7 @@ public:
 	CHudCrosshairs  m_Crosshairs;
 	CHudTimer		m_Timer;
 	CHudScores		m_Scores;
+	CHudOldScoreboard m_OldScoreBoard;
 
 	void Init( void );
 	void VidInit( void );
@@ -694,6 +696,8 @@ public:
 
 	// sprite indexes
 	int m_HUD_number_0;
+
+	int DrawHudNumberStringFixed(int xpos, int ypos, int iNumber, int r, int g, int b);
 
 	int DrawHudNumber(int x, int y, int number, int r, int g, int b);
 	int DrawHudNumberCentered(int x, int y, int number, int r, int g, int b);
