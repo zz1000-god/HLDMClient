@@ -96,6 +96,7 @@ struct HUDLIST {
 #include "hud_timer.h"
 #include "hud_scores.h"
 #include "hud_oldscoreboard.h"
+#include "hud_fps.h"
 
 //
 //-----------------------------------------------------
@@ -667,6 +668,7 @@ public:
 	CHudTimer		m_Timer;
 	CHudScores		m_Scores;
 	CHudOldScoreboard m_OldScoreBoard;
+	CHudFPS			m_FPS;
 
 	void Init( void );
 	void VidInit( void );
