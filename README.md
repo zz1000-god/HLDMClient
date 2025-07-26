@@ -16,6 +16,19 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - Time elapsed since map start (`hud_timer 2`)
   - Local personal timer (`hud_timer 3`)
 
+-Added fps counter like in rofi s client (NGHL) 
+  -`hud_fps 0` , `1` , `2` , `3` 
+    - 0 disabled
+    - 1 three colors 
+    - 2 two colors 
+    - 3 one color 
+      like in rofi s client (NGHL) `hud_showfps_colormode`
+  - `hud_fps_pos "1400 0"` position for fps
+  - `hud_fps_precision 0` numbers after `.` max `4`
+  - `hud_fps_yellowflor 21` the threshold after which fps will be displayed in red
+  - `hud_fps_greenflor 60` the threshold after which fps will be displayed in yellow
+  - `hud_fps_updaterate 1.0` fps refresh rate default `1.0` 1 second
+
 -Added hud sprite position changing:
   - `hud_ammo1_pos "x y"` change position of primary ammo, default "0 0" <- disabled
   - `hud_ammo2_pos "x y"` change position of secondary ammo, like grenades in mp5
