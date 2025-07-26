@@ -395,6 +395,7 @@ void CHud :: Init( void )
 	m_Timer.Init();
 	m_Scores.Init();
 	m_OldScoreBoard.Init();
+	m_FPS.Init();
 
 	GetClientVoiceMgr()->Init(&g_VoiceStatusHelper, (vgui::Panel**)&gViewPort);
 
@@ -562,6 +563,7 @@ void CHud :: VidInit( void )
 	m_Timer.VidInit();
 	m_Scores.VidInit();
 	m_OldScoreBoard.VidInit();
+	m_FPS.VidInit();
 }
 
 int CHud::MsgFunc_Logo(const char *pszName,  int iSize, void *pbuf)
