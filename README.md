@@ -41,6 +41,7 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 ### Movement changes 
  - Added `+ducktap` like in OpenAG
  - Added `cl_autojump 1` , `0` like in OpenAG
+ - Added `zpecial` `_zpecial` alternative for `special` `_special` uses for bunnyhop and other script
  - Support for both old and new `+USE` (E key) mechanics.
   - Use `cl_useslowdown 0` for pre HL 25 servers (instant stop)
   - Use `cl_useslowdown 1` for HL 25 servers
