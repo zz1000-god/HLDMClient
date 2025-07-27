@@ -22,6 +22,7 @@
 #include "cl_util.h"
 #include <string.h>
 #include <stdio.h>
+#include <FileSystem.h>
 #include "parsemsg.h"
 #include "hud_servers.h"
 #include "vgui_int.h"
@@ -32,6 +33,7 @@
 #include "vgui_ScorePanel.h"
 #include "useslowdown.h"
 #include "forcemodel.h"
+#include "net_api.h"
 
 hud_player_info_t	 g_PlayerInfoList[MAX_PLAYERS+1];	   // player info from the engine
 extra_player_info_t  g_PlayerExtraInfo[MAX_PLAYERS+1];   // additional player info sent directly to the client dll
@@ -294,6 +296,62 @@ void __CmdFunc_Append()
 	EngineClientCmd(gEngfuncs.Cmd_Argv(1));
 }
 
+void WriteIPAdress() {
+	net_status_t netstatus;
+	gEngfuncs.pNetAPI->Status(&netstatus);
+
+	const char* address = gEngfuncs.pNetAPI->AdrToString(&netstatus.remote_address);
+
+	if (!address)
+		return;
+	if (!strcmp(address, "loopback"))
+		return;
+
+	char szFile[MAX_PATH];
+	sprintf(szFile, "%s/lastip.txt", gEngfuncs.pfnGetGameDirectory());
+
+	FILE* pFile = fopen(szFile, "w");
+
+	if (!pFile)
+		return;
+
+	fprintf(pFile, "%s", address);
+	fflush(pFile);
+	fclose(pFile);
+}
+
+void joinlast() {
+	char path[MAX_PATH];
+	snprintf(path, sizeof(path), "%s/lastip.txt", gEngfuncs.pfnGetGameDirectory());
+
+	FILE* inFile = fopen(path, "r");
+	if (!inFile)
+	{
+		return;
+	}
+
+	char address[32] = { 0 };
+	if (!fgets(address, sizeof(address), inFile))
+	{
+		fclose(inFile);
+		return;
+	}
+	fclose(inFile);
+
+	size_t len = strlen(address);
+	if (len > 0 && (address[len - 1] == '\n' || address[len - 1] == '\r'))
+		address[len - 1] = '\0';
+
+	if (strlen(address) == 0)
+	{
+		return;
+	}
+
+	char cmd[64];
+	snprintf(cmd, sizeof(cmd), "connect %s", address);
+	gEngfuncs.pfnClientCmd(cmd);
+}
+
 cvar_t* cl_useslowdown = NULL;
 // This is called every time the DLL is loaded
 void CHud :: Init( void )
@@ -357,6 +415,7 @@ void CHud :: Init( void )
 	cl_useslowdown = CVAR_CREATE("cl_useslowdown", "0", FCVAR_ARCHIVE);
 	cl_sprite = CVAR_CREATE("cl_sprite", "640", FCVAR_ARCHIVE);
 
+	gEngfuncs.pfnAddCommand("joinlast", joinlast);
 
 	m_pSpriteList = NULL;
 
@@ -450,6 +509,7 @@ int CHud :: GetSpriteIndex( const char *SpriteName )
 
 void CHud :: VidInit( void )
 {
+	WriteIPAdress();
 	m_scrinfo.iSize = sizeof(m_scrinfo);
 	GetScreenInfo(&m_scrinfo);
 
