@@ -6,7 +6,7 @@
 #include "net_api.h" 
 #include "net.h" 
 
-#define NET_API gEngfuncs.pNetAPI // Макрос для доступу до NetAPI
+#define NET_API gEngfuncs.pNetAPI
 
 enum RulesRequestStatus
 {
