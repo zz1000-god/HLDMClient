@@ -39,11 +39,19 @@ int CHudFPS::Draw(float flTime)
     m_iFrameCount++;
 
     float updateInterval = hud_fps_updaterate ? hud_fps_updaterate->value : 1.0f;
-    if (updateInterval < 0.05f) updateInterval = 0.05f;
+    if (updateInterval < 0.01f) updateInterval = 0.01f;
 
     if (flCurrentTime - m_flLastTime >= updateInterval)
     {
         m_flFPS = m_iFrameCount / (flCurrentTime - m_flLastTime);
+
+        cvar_t* fpsMax = gEngfuncs.pfnGetCvarPointer("fps_max");
+        if (fpsMax && fpsMax->value > 0.0f)
+        {
+            if (m_flFPS > fpsMax->value)
+                m_flFPS = fpsMax->value;
+        }
+
         m_iFrameCount = 0;
         m_flLastTime = flCurrentTime;
     }
