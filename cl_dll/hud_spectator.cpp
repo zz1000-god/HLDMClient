@@ -670,7 +670,7 @@ int CHudSpectator::Draw(float flTime)
 		
 		lx = strlen(string)*3; // 3 is avg. character length :)
 
-		int r = 255, g = 160, b = 0;
+		float r = 1.0f, g = 160.0f / 255.0f, b = 0.0f;
 
 		gEngfuncs.pfnDrawSetTextColor( color[0], color[1], color[2] );
 		gHUD.DrawConsoleStringWithColorTags( m_vPlayerPos[i][0]-lx,
