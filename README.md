@@ -38,6 +38,8 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - `hud_speedometer_pos "x y"` change position of speedometer
   - `hud_weapon_pos "x y"` change position of weapon sprite
 
+-Added command `joinlast` like in rofi s client (NGHL)
+
 ### Movement changes 
  - Added `+ducktap` like in OpenAG
  - Added `cl_autojump 1` , `0` like in OpenAG
