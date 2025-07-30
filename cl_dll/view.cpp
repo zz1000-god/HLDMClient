@@ -91,6 +91,9 @@ cvar_t	*cl_bobup;
 cvar_t	*cl_waterdist;
 cvar_t	*cl_chasedist;
 
+cvar_t* cl_disable_deadcam;
+void V_StartPitchDrift(void);
+
 // These cvars are not registered (so users can't cheat), so set the ->value field directly
 // Register these cvars in V_Init() if needed for easy tweaking
 cvar_t	v_iyaw_cycle		= {"v_iyaw_cycle", "2", 0, 2};
@@ -101,6 +104,31 @@ cvar_t	v_iroll_level		= {"v_iroll_level", "0.1", 0, 0.1};
 cvar_t	v_ipitch_level		= {"v_ipitch_level", "0.3", 0, 0.3};
 
 float	v_idlescale;  // used by TFC for concussion grenade effect
+
+/*
+=============
+V_Init
+=============
+*/
+void V_Init(void)
+{
+	gEngfuncs.pfnAddCommand("centerview", V_StartPitchDrift);
+
+	scr_ofsx = gEngfuncs.pfnRegisterVariable("scr_ofsx", "0", 0);
+	scr_ofsy = gEngfuncs.pfnRegisterVariable("scr_ofsy", "0", 0);
+	scr_ofsz = gEngfuncs.pfnRegisterVariable("scr_ofsz", "0", 0);
+
+	v_centermove = gEngfuncs.pfnRegisterVariable("v_centermove", "0.15", 0);
+	v_centerspeed = gEngfuncs.pfnRegisterVariable("v_centerspeed", "500", 0);
+
+	cl_bobcycle = gEngfuncs.pfnRegisterVariable("cl_bobcycle", "0.8", 0);// best default for my experimental gun wag (sjb)
+	cl_bob = gEngfuncs.pfnRegisterVariable("cl_bob", "0.01", FCVAR_ARCHIVE);// best default for my experimental gun wag (sjb)
+	cl_bobup = gEngfuncs.pfnRegisterVariable("cl_bobup", "0.5", 0);
+	cl_waterdist = gEngfuncs.pfnRegisterVariable("cl_waterdist", "4", 0);
+	cl_chasedist = gEngfuncs.pfnRegisterVariable("cl_chasedist", "112", 0);
+	cl_disable_deadcam = CVAR_CREATE("cl_disable_deadcam", "0", FCVAR_ARCHIVE);
+}
+
 
 //=============================================================================
 /*
@@ -415,7 +443,9 @@ void V_CalcViewRoll ( struct ref_params_s *pparams )
 	{
 		// only roll the view if the player is dead and the viewheight[2] is nonzero 
 		// this is so deadcam in multiplayer will work.
-		pparams->viewangles[ROLL] = 80;	// dead view angle
+		if(!cl_disable_deadcam->value)
+			pparams->viewangles[ROLL] = 80;	// dead view angle
+		
 		return;
 	}
 }
@@ -1440,7 +1470,7 @@ int V_FindViewModelByWeaponModel(int weaponindex)
 
 		while ( modelmap[i] != NULL )
 		{
-			if ( !strnicmp( weaponModel->name, modelmap[i][0], len ) )
+			if ( !_strnicmp( weaponModel->name, modelmap[i][0], len ) )
 			{
 				return gEngfuncs.pEventAPI->EV_FindModelIndex( modelmap[i][1] );
 			}
@@ -1701,30 +1731,6 @@ void V_PunchAxis( int axis, float punch )
 {
 	ev_punchangle[ axis ] = punch;
 }
-
-/*
-=============
-V_Init
-=============
-*/
-void V_Init (void)
-{
-	gEngfuncs.pfnAddCommand ("centerview", V_StartPitchDrift );
-
-	scr_ofsx			= gEngfuncs.pfnRegisterVariable( "scr_ofsx","0", 0 );
-	scr_ofsy			= gEngfuncs.pfnRegisterVariable( "scr_ofsy","0", 0 );
-	scr_ofsz			= gEngfuncs.pfnRegisterVariable( "scr_ofsz","0", 0 );
-
-	v_centermove		= gEngfuncs.pfnRegisterVariable( "v_centermove", "0.15", 0 );
-	v_centerspeed		= gEngfuncs.pfnRegisterVariable( "v_centerspeed","500", 0 );
-
-	cl_bobcycle			= gEngfuncs.pfnRegisterVariable( "cl_bobcycle","0.8", 0 );// best default for my experimental gun wag (sjb)
-	cl_bob				= gEngfuncs.pfnRegisterVariable( "cl_bob","0.01", FCVAR_ARCHIVE );// best default for my experimental gun wag (sjb)
-	cl_bobup			= gEngfuncs.pfnRegisterVariable( "cl_bobup","0.5", 0 );
-	cl_waterdist		= gEngfuncs.pfnRegisterVariable( "cl_waterdist","4", 0 );
-	cl_chasedist		= gEngfuncs.pfnRegisterVariable( "cl_chasedist","112", 0 );
-}
-
 
 //#define TRACE_TEST
 #if defined( TRACE_TEST )
