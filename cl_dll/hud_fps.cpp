@@ -51,7 +51,6 @@ int CHudFPS::Draw(float flTime)
             if (m_flFPS > fpsMax->value)
                 m_flFPS = fpsMax->value;
         }
-
         m_iFrameCount = 0;
         m_flLastTime = flCurrentTime;
     }
@@ -81,17 +80,18 @@ int CHudFPS::Draw(float flTime)
     if(hud_fps->value == 1){
         int r, g, b;
 
-        r = 0;
-        g = 255;
-        b = 0;
-
         if (m_flFPS < hud_fps_yellowflor->value) {
             r = 255;
             g = 0;
             b = 0;
         }
-        if (m_flFPS < hud_fps_greenflor->value) {
+        else if (m_flFPS < hud_fps_greenflor->value) {
             r = 255;
+            g = 255;
+            b = 0;
+        }
+        else {
+            r = 0;
             g = 255;
             b = 0;
         }
