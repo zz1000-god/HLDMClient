@@ -257,7 +257,7 @@ bool HACK_GetPlayerUniqueID( int iPlayer, char playerID[16] )
 {
 	return !!gEngfuncs.GetPlayerUniqueID( iPlayer, playerID ); // TODO remove after testing
 }
-		
+	
 //-----------------------------------------------------------------------------
 // Purpose: Recalculate the internal scoreboard data
 //-----------------------------------------------------------------------------
@@ -336,7 +336,7 @@ void ScorePanel::SortTeams()
 		int j;
 		for ( j = 1; j <= m_iNumTeams; j++ )
 		{
-			if ( !stricmp( g_PlayerExtraInfo[i].teamname, g_TeamInfo[j].name ) )
+			if ( !_stricmp( g_PlayerExtraInfo[i].teamname, g_TeamInfo[j].name ) )
 				break;
 		}
 		if ( j > m_iNumTeams )  // player is not in a team, skip to the next guy
@@ -433,7 +433,7 @@ void ScorePanel::SortPlayers( int iTeam, char *team )
 			{
 				cl_entity_t *ent = gEngfuncs.GetEntityByIndex( i );
 
-				if ( ent && !(team && stricmp(g_PlayerExtraInfo[i].teamname, team)) )  
+				if ( ent && !(team && _stricmp(g_PlayerExtraInfo[i].teamname, team)) )  
 				{
 					extra_player_info_t *pl_info = &g_PlayerExtraInfo[i];
 					if ( pl_info->frags > highest_frags || pl_info->deaths < lowest_deaths )
@@ -500,7 +500,7 @@ void ScorePanel::RebuildTeams()
 			if ( g_TeamInfo[j].name[0] == '\0' )
 				break;
 
-			if ( !stricmp( g_PlayerExtraInfo[i].teamname, g_TeamInfo[j].name ) )
+			if ( !_stricmp( g_PlayerExtraInfo[i].teamname, g_TeamInfo[j].name ) )
 				break;
 		}
 
@@ -772,6 +772,7 @@ void ScorePanel::FillGrid()
 				switch (col)
 				{
 				case COLUMN_NAME:
+				{
 					/*
 					if (g_pTrackerUser)
 					{
@@ -785,8 +786,14 @@ void ScorePanel::FillGrid()
 						}
 					}
 					*/
+					char name[128];
+					strncpy(name, pl_info->name, sizeof(name));
+					name[sizeof(name) - 1] = '\0';
+
+					gHUD.AppendPlayerIfOnlyColorTags(name, sizeof(name));
+
 					char stripped_name[128];
-					color_tags::strip_color_tags(stripped_name, pl_info->name, sizeof(stripped_name));
+					color_tags::strip_color_tags(stripped_name, name, sizeof(stripped_name));
 
 					// Check if player is spectator and add (S) suffix
 					if (g_IsSpectator[m_iSortedRows[row]] || started_drawing_spectators) {
@@ -795,6 +802,7 @@ void ScorePanel::FillGrid()
 					else {
 						sprintf(sz, "%s  ", stripped_name);
 					}
+				}
 					break;
 				case COLUMN_MODEL:
 					sprintf(sz, "%s ", pl_info->model);
@@ -1049,7 +1057,7 @@ void CLabelHeader::paintBackground()
 
 	setBgColor(oldBg);
 }
-		
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Label paint functions - take into account current highligh status
