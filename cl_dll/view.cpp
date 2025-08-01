@@ -21,6 +21,18 @@
 #include "hltv.h"
 #include "Exports.h"
 
+#define SAFE_ARRAY_ACCESS(array, index, size) \
+    (((index) >= 0 && (index) < (size)) ? &(array)[(index)] : NULL)
+
+#define SAFE_CVAR_VALUE(cvar, defaultval) \
+    ((cvar) && (cvar)->value != 0.0f ? (cvar)->value : (defaultval))
+
+#define VALIDATE_ENTITY(ent) \
+    ((ent) && (ent)->model && (ent)->index > 0)
+
+#define CLAMP_ANGLE(angle) \
+    while((angle) > 180.0f) (angle) -= 360.0f; \
+    while((angle) < -180.0f) (angle) += 360.0f;
 
 #ifndef M_PI
 #define M_PI		3.14159265358979323846	// matches value in gcc v2 math.h
@@ -129,6 +141,19 @@ void V_Init(void)
 	cl_disable_deadcam = CVAR_CREATE("cl_disable_deadcam", "0", FCVAR_ARCHIVE);
 }
 
+cl_entity_t* SafeGetEntityByIndex(int index)
+{
+	if (index <= 0)
+		return NULL;
+
+	cl_entity_t* ent = gEngfuncs.GetEntityByIndex(index);
+
+	if (ent && ent->index != index)
+		return NULL;
+
+	return ent;
+}
+
 
 //=============================================================================
 /*
@@ -196,7 +221,9 @@ float V_CalcBob ( struct ref_params_s *pparams )
 	float	cycle;
 	static float	lasttime;
 	vec3_t	vel;
-	
+
+	if (!pparams || !cl_bobcycle || cl_bobcycle->value <= 0.0f)
+		return 0.0f;
 
 	if ( pparams->onground == -1 ||
 		 pparams->time == lasttime )
@@ -208,6 +235,10 @@ float V_CalcBob ( struct ref_params_s *pparams )
 	lasttime = pparams->time;
 
 	bobtime += pparams->frametime;
+
+	if (cl_bobcycle->value <= 0.0f)
+		return bob;
+
 	cycle = bobtime - (int)( bobtime / cl_bobcycle->value ) * cl_bobcycle->value;
 	cycle /= cl_bobcycle->value;
 	
@@ -395,6 +426,9 @@ void V_CalcGunAngle ( struct ref_params_s *pparams )
 	if ( !viewent )
 		return;
 
+	if (!pparams)
+		return;
+
 	viewent->angles[YAW]   =  pparams->viewangles[YAW]   + pparams->crosshairangle[YAW];
 	viewent->angles[PITCH] = -pparams->viewangles[PITCH] + pparams->crosshairangle[PITCH] * 0.25;
 	viewent->angles[ROLL]  -= v_idlescale * sin(pparams->time*v_iroll_cycle.value) * v_iroll_level.value;
@@ -428,11 +462,17 @@ Roll is induced by movement and damage
 */
 void V_CalcViewRoll ( struct ref_params_s *pparams )
 {
+	if (!pparams)
+		return;
+
 	float		side;
 	cl_entity_t *viewentity;
 	
-	viewentity = gEngfuncs.GetEntityByIndex( pparams->viewentity );
+	viewentity = SafeGetEntityByIndex( pparams->viewentity );
 	if ( !viewentity )
+		return;
+
+	if (!pparams->movevars)
 		return;
 
 	side = V_CalcRoll ( viewentity->angles, pparams->simvel, pparams->movevars->rollangle, pparams->movevars->rollspeed );
@@ -928,11 +968,16 @@ void V_SmoothInterpolateAngles( float * startAngle, float * endAngle, float * fi
 // Get the origin of the Observer based around the target's position and angles
 void V_GetChaseOrigin( float * angles, float * origin, float distance, float * returnvec )
 {
+	if (!angles || !origin || !returnvec)
+		return;
+
 	vec3_t	vecEnd;
 	vec3_t	forward;
 	vec3_t	vecStart;
 	pmtrace_t * trace;
 	int maxLoops = 8;
+
+	int safetyCounter = 0;
 
 	int ignoreent = -1;	// first, ignore no entity
 	
@@ -947,8 +992,10 @@ void V_GetChaseOrigin( float * angles, float * origin, float distance, float * r
 
 	VectorMA(vecStart, distance , forward, vecEnd);
 
-	while ( maxLoops > 0)
+	while ( maxLoops > 0 && safetyCounter < 100 )
 	{
+		safetyCounter++;
+
 		trace = gEngfuncs.PM_TraceLine( vecStart, vecEnd, PM_TRACELINE_PHYSENTSONLY, 2, ignoreent );
 
 		// WARNING! trace->ent is is the number in physent list not the normal entity number
@@ -956,7 +1003,7 @@ void V_GetChaseOrigin( float * angles, float * origin, float distance, float * r
 		if ( trace->ent <= 0)
 			break;	// we hit the world or nothing, stop trace
 
-		ent = gEngfuncs.GetEntityByIndex( PM_GetPhysEntInfo( trace->ent ) );
+		ent = SafeGetEntityByIndex( PM_GetPhysEntInfo( trace->ent ) );
 
 		if ( ent == NULL )
 			break;
@@ -1497,8 +1544,18 @@ void V_CalcSpectatorRefdef ( struct ref_params_s * pparams )
 
 	static int lastWeaponModelIndex = 0;
 	static int lastViewModelIndex = 0;
+
+	if (!pparams)
+		return;
 		
 	cl_entity_t	 * ent = gEngfuncs.GetEntityByIndex( g_iUser2 );
+
+	if (!ent)
+	{
+		// Fallback to normal view if spectator entity is invalid
+		V_CalcNormalRefdef(pparams);
+		return;
+	}
 	
 	pparams->onlyClientDraw = false;
 
