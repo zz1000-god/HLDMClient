@@ -352,6 +352,50 @@ void joinlast() {
 	gEngfuncs.pfnClientCmd(cmd);
 }
 
+bool CHud::AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
+{
+	char* original = text;
+	char lastColorTag[3] = "";
+	bool onlyTags = true;
+
+	while (*text)
+	{
+		unsigned char c = (unsigned char)*text;
+
+		if (c == '^' && isdigit((unsigned char)*(text + 1)) && *(text + 1) != '0')
+		{
+			lastColorTag[0] = *text;
+			lastColorTag[1] = *(text + 1);
+			lastColorTag[2] = '\0';
+			text += 2;
+		}
+		else if (c <= 32)
+		{
+			++text;
+		}
+		else
+		{
+			onlyTags = false;
+			break;
+		}
+	}
+
+	if (onlyTags && lastColorTag[0] != '\0')
+	{
+
+		char player[16];
+		snprintf(player, sizeof(player), "%sPlayer", lastColorTag);
+
+		size_t len = strlen(text);
+		if (len + strlen(player) + 6 < maxLen) // 6 == strlen("Player")
+		{
+			strcat(text, player);
+			return true;
+		}
+	}
+	return false;
+}
+
 cvar_t* cl_useslowdown = NULL;
 // This is called every time the DLL is loaded
 void CHud :: Init( void )
