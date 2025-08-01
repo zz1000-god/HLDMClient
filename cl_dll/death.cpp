@@ -104,17 +104,17 @@ int GetStringLenWithoutColorTags(const char* str)
 	int writePos = 0;
 	int readPos = 0;
 
-	// Копіюємо рядок, пропускаючи кольорові теги
+	// РљРѕРїС–СЋС”РјРѕ СЂСЏРґРѕРє, РїСЂРѕРїСѓСЃРєР°СЋС‡Рё РєРѕР»СЊРѕСЂРѕРІС– С‚РµРіРё
 	while (str[readPos] && writePos < sizeof(tempStr) - 1)
 	{
 		if (str[readPos] == '^' && str[readPos + 1] >= '0' && str[readPos + 1] <= '9')
 		{
-			// Пропускаємо кольоровий тег (^1, ^2, etc.)
+			// РџСЂРѕРїСѓСЃРєР°С”РјРѕ РєРѕР»СЊРѕСЂРѕРІРёР№ С‚РµРі (^1, ^2, etc.)
 			readPos += 2;
 		}
 		else if (str[readPos] == '^' && str[readPos + 1] == '^')
 		{
-			// Подвійний ^ означає літеральний символ ^
+			// РџРѕРґРІС–Р№РЅРёР№ ^ РѕР·РЅР°С‡Р°С” Р»С–С‚РµСЂР°Р»СЊРЅРёР№ СЃРёРјРІРѕР» ^
 			tempStr[writePos++] = '^';
 			readPos += 2;
 		}
@@ -155,16 +155,18 @@ int CHudDeathNotice::Draw(float flTime)
 
 			int id = (rgDeathNoticeList[i].iId == -1) ? m_HUD_d_skull : rgDeathNoticeList[i].iId;
 
-			// ВИПРАВЛЕННЯ: Використовуємо функцію без кольорових тегів
+			// Р’РРџР РђР’Р›Р•РќРќРЇ: Р’РёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ С„СѓРЅРєС†С–СЋ Р±РµР· РєРѕР»СЊРѕСЂРѕРІРёС… С‚РµРіС–РІ
 			x = ScreenWidth - GetStringLenWithoutColorTags(rgDeathNoticeList[i].szVictim) - (gHUD.GetSpriteRect(id).right - gHUD.GetSpriteRect(id).left);
 
 			if (!rgDeathNoticeList[i].iSuicide)
 			{
-				// ВИПРАВЛЕННЯ: Тут також використовуємо функцію без кольорових тегів
+				// Р’РРџР РђР’Р›Р•РќРќРЇ: РўСѓС‚ С‚Р°РєРѕР¶ РІРёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ С„СѓРЅРєС†С–СЋ Р±РµР· РєРѕР»СЊРѕСЂРѕРІРёС… С‚РµРіС–РІ
 				x -= (5 + GetStringLenWithoutColorTags(rgDeathNoticeList[i].szKiller));
 
+				gHUD.AppendPlayerIfOnlyColorTags(rgDeathNoticeList[i].szKiller, sizeof(rgDeathNoticeList[i].szKiller));
+
 				// Draw killers name
-				if (rgDeathNoticeList[i].KillerColor)
+				if (rgDeathNoticeList[i].KillerColor) {
 					x = 5 + gHUD.DrawConsoleStringWithColorTags(
 						x,
 						y,
@@ -174,6 +176,7 @@ int CHudDeathNotice::Draw(float flTime)
 						rgDeathNoticeList[i].KillerColor[1],
 						rgDeathNoticeList[i].KillerColor[2]
 					);
+				}
 				else
 					x = 5 + DrawConsoleString(x, y, rgDeathNoticeList[i].szKiller);
 			}
@@ -193,6 +196,8 @@ int CHudDeathNotice::Draw(float flTime)
 			// Draw victims name (if it was a player that was killed)
 			if (rgDeathNoticeList[i].iNonPlayerKill == FALSE)
 			{
+				gHUD.AppendPlayerIfOnlyColorTags(rgDeathNoticeList[i].szVictim, sizeof(rgDeathNoticeList[i].szVictim));
+
 				if (rgDeathNoticeList[i].VictimColor)
 					x = gHUD.DrawConsoleStringWithColorTags(
 						x,
