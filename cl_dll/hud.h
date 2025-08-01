@@ -623,6 +623,7 @@ public:
 		float default_b = 0.0f
 	);
 	void GetConsoleStringSizeWithColorTags(char* string, int& width, int& height);
+	bool AppendPlayerIfOnlyColorTags(char* text, size_t maxLen);
 
 private:
 	// the memory for these arrays are allocated in the first call to CHud::VidInit(), when the hud.txt and associated sprites are loaded.
