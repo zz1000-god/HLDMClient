@@ -38,7 +38,7 @@ extern float *GetClientColor( int clientIndex );
 #define LINE_START  10
 static float SCROLL_SPEED = 5;
 
-static char g_szLineBuffer[ MAX_LINES + 1 ][ MAX_CHARS_PER_LINE ];
+static char g_szLineBuffer[ MAX_LINES + 1 ][ MAX_CHARS_PER_LINE + 1 ];
 static float *g_pflNameColors[ MAX_LINES + 1 ];
 static int g_iNameLengths[ MAX_LINES + 1 ];
 static float flScrollTime = 0;  // the time at which the lines next scroll up
@@ -128,37 +128,33 @@ int CHudSayText::Draw(float flTime)
 		{
 			if (*g_szLineBuffer[i] == 2 && g_pflNameColors[i])
 			{
-				// це повідомлення гравця з ніком
 				char buf[MAX_PLAYER_NAME_LENGTH + 32];
 
-				// копіюємо частину з ніком
 				strncpy(buf, g_szLineBuffer[i], min(g_iNameLengths[i], MAX_PLAYER_NAME_LENGTH + 31));
 				buf[min(g_iNameLengths[i], MAX_PLAYER_NAME_LENGTH + 31)] = 0;
 
-				// малюємо нік в кольорі гравця використовуючи спеціальну функцію
+				gHUD.AppendPlayerIfOnlyColorTags(buf, sizeof(buf));
+
 				int x = gHUD.DrawConsoleStringWithColorTags(
 					LINE_START,
 					y,
-					buf + 1, // пропускаємо контрольний символ
+					buf + 1,
 					true,
 					g_pflNameColors[i][0],
 					g_pflNameColors[i][1],
 					g_pflNameColors[i][2]
 				);
 
-				// малюємо решту тексту після ніка
 				char* remaining_text = g_szLineBuffer[i] + g_iNameLengths[i];
 
 				if (remaining_text && *remaining_text)
 				{
 					if (color_tags::contains_color_tags(remaining_text))
 					{
-						// є кольорові теги - використовуємо спеціальну функцію
 						gHUD.DrawConsoleStringWithColorTags(x, y, remaining_text);
 					}
 					else
 					{
-						// немає кольорових тегів - малюємо оранжевим
 						gEngfuncs.pfnDrawSetTextColor(1.0f, 160.0f / 255.0f, 0.0f);
 						DrawConsoleString(x, y, remaining_text);
 					}
@@ -166,14 +162,12 @@ int CHudSayText::Draw(float flTime)
 			}
 			else
 			{
-				// звичайне повідомлення без ніка
 				if (color_tags::contains_color_tags(g_szLineBuffer[i]))
 				{
 					gHUD.DrawConsoleStringWithColorTags(LINE_START, y, g_szLineBuffer[i], i);
 				}
 				else
 				{
-					// встановлюємо оранжевий колір для звичайного тексту
 					gEngfuncs.pfnDrawSetTextColor(1.0f, 160.0f / 255.0f, 0.0f);
 					DrawConsoleString(LINE_START, y, g_szLineBuffer[i]);
 				}
@@ -265,7 +259,6 @@ void CHudSayText::EnsureTextFitsInOneLineAndWrapIfHaveTo(int line)
 {
     int line_width = 0;
 
-    // Для точного вимірювання тексту з кольоровими тегами, спочатку видаляємо теги
     char clean_text[MAX_CHARS_PER_LINE];
     color_tags::strip_color_tags(clean_text, g_szLineBuffer[line], sizeof(clean_text));
 
@@ -278,21 +271,18 @@ void CHudSayText::EnsureTextFitsInOneLineAndWrapIfHaveTo(int line)
         char* last_break = NULL;
 
         for (char* x = g_szLineBuffer[line]; *x != 0; x++)
-        {
-            // Пропускаємо кольорові теги при підрахунку довжини
-            if (x[0] == '^' && x[1] >= '0' && x[1] <= '9')
-            {
-                // Перевіряємо що це не частина імені гравця
+		{
+			if (x[0] == '^' && x[1] >= '0' && x[1] <= '9')
+            {      
                 if (g_szLineBuffer[line][0] != 2 || g_szLineBuffer[line] + g_iNameLengths[line] <= x)
                 {
-                    x++; // пропускаємо символ кольору
-                    if (*x != 0) x++; // пропускаємо цифру
+                    x++;
+                    if (*x != 0) x++;
                     if (*x == 0) break;
                     continue;
                 }
             }
 
-            // Обробка старих кольорових тегів
             if (x[0] == '/' && x[1] == '(')
             {
                 x += 2;
