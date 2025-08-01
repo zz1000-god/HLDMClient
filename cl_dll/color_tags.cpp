@@ -60,7 +60,7 @@ namespace color_tags {
 			int g,
 			int b)> function) {
 		bool custom_color = false;
-		int r = 1.0f, g =160.0f/ 255.0f, b = 0.0f;
+		float r = 1.0f, g =160.0f / 255.0f, b = 0.0f;
 		char* temp = string;
 
 		while ((temp = strchr(temp, '^'))) {
