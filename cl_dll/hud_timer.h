@@ -10,7 +10,7 @@ public:
 
 	int MsgFunc_Timer(const char* name, int size, void* buf);
 	void Think();
-
+	
 private:
 	void SyncTimer(float fTime);
 	void DoResync();
@@ -24,7 +24,7 @@ private:
 
 	// Sync data
 	float m_flEndTime;
-	float m_flEffectiveTime; 
+	float m_flEffectiveTime;
 	float m_flNextSyncTime;
 	bool m_flSynced;
 	bool m_bDelayTimeleftReading;
@@ -32,13 +32,16 @@ private:
 	// CVars
 	cvar_t* hud_timer;
 	cvar_t* hud_timer_height;
+	cvar_t* hud_timer_24f;
+	cvar_t* hud_timer_show_seconds;
 	cvar_t* m_pCvarHudTimerSync;
 	cvar_t* m_pCvarMpTimelimit;
 	cvar_t* m_pCvarMpTimeleft;
 
+
 	char m_szPacketBuffer[2048]; 
 	int m_iReceivedSize;         
-	int m_iResponceID;           
-	int m_iReceivedPackets;     
+	int m_iResponceID;         
+	int m_iReceivedPackets;    
 	int m_iReceivedPacketsCount;
 };
