@@ -776,6 +776,11 @@ void HUD_WeaponsPostThink( local_state_s *from, local_state_s *to, usercmd_t *cm
 		}
 
 		pfrom = &from->weapondata[ i ];
+
+		if (pCurrent && pCurrent->pev)
+		{
+			pCurrent->pev->fuser1 = pfrom->fuser1;
+		}
 		
 		pCurrent->m_fInReload			= pfrom->m_fInReload;
 		pCurrent->m_fInSpecialReload	= pfrom->m_fInSpecialReload;
