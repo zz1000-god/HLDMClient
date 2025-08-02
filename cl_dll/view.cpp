@@ -104,6 +104,7 @@ cvar_t	*cl_waterdist;
 cvar_t	*cl_chasedist;
 
 cvar_t* cl_disable_deadcam;
+cvar_t* cl_oldbob;
 void V_StartPitchDrift(void);
 
 // These cvars are not registered (so users can't cheat), so set the ->value field directly
@@ -139,6 +140,7 @@ void V_Init(void)
 	cl_waterdist = gEngfuncs.pfnRegisterVariable("cl_waterdist", "4", 0);
 	cl_chasedist = gEngfuncs.pfnRegisterVariable("cl_chasedist", "112", 0);
 	cl_disable_deadcam = CVAR_CREATE("cl_disable_deadcam", "0", FCVAR_ARCHIVE);
+	cl_oldbob = CVAR_CREATE("cl_oldbob", "0", FCVAR_ARCHIVE);
 }
 
 cl_entity_t* SafeGetEntityByIndex(int index)
@@ -436,6 +438,11 @@ void V_CalcGunAngle ( struct ref_params_s *pparams )
 	// don't apply all of the v_ipitch to prevent normally unseen parts of viewmodel from coming into view.
 	viewent->angles[PITCH] -= v_idlescale * sin(pparams->time*v_ipitch_cycle.value) * (v_ipitch_level.value * 0.5);
 	viewent->angles[YAW]   -= v_idlescale * sin(pparams->time*v_iyaw_cycle.value) * v_iyaw_level.value;
+
+	if (cl_oldbob->value == 1.0f) {
+		VectorCopy(viewent->angles, viewent->curstate.angles);
+		VectorCopy(viewent->angles, viewent->latched.prevangles);
+	}
 }
 
 /*
@@ -898,10 +905,12 @@ void V_CalcNormalRefdef ( struct ref_params_s *pparams )
 	// previously done in V_CalcGunAngle but that happens
 	// before a bunch of other stuff happens, which nukes
 	// a bunch of the viewbob fx.
-    VectorCopy( view->origin, view->curstate.origin );
-    VectorCopy( view->origin, view->latched.prevorigin );
-	VectorCopy( view->angles, view->curstate.angles );
-	VectorCopy( view->angles, view->latched.prevangles );
+	if (!cl_oldbob->value) {
+		VectorCopy(view->origin, view->curstate.origin);
+		VectorCopy(view->origin, view->latched.prevorigin);
+		VectorCopy(view->angles, view->curstate.angles);
+		VectorCopy(view->angles, view->latched.prevangles);
+	}
 
 	lasttime = pparams->time;
 
