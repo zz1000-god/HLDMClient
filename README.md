@@ -48,6 +48,11 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - Use `cl_useslowdown 0` for pre HL 25 servers (instant stop)
   - Use `cl_useslowdown 1` for HL 25 servers
 
+### View changes
+  - Added `cl_viewmodel_fov` like in OpenAG
+  - Added `cl_disable_deadcam` like in AG6.6U
+  - Added `cl_oldbob` weapon bob like in pre HL25 update
+
 ### 👕 Forced Models
 - `cl_forceenmodel "model"` — Replace all enemy models with a specific one.
 - `cl_forceteammodel "model"` — Replace all teammates' models.
