@@ -4,7 +4,7 @@
 #include "hud_timer.h"
 #include <ctime>
 #include "net_api.h" 
-#include "net.h" 
+#include "net.h"     
 
 #define NET_API gEngfuncs.pNetAPI
 
@@ -46,6 +46,8 @@ int CHudTimer::Init()
 	hud_timer = CVAR_CREATE("hud_timer", "1", FCVAR_ARCHIVE);
 	hud_timer_height = CVAR_CREATE("hud_timer_height", "0", FCVAR_ARCHIVE);
 	m_pCvarHudTimerSync = CVAR_CREATE("hud_timer_sync", "1", FCVAR_ARCHIVE);
+    hud_timer_24f = CVAR_CREATE("hud_timer_clock_24f", "1", FCVAR_ARCHIVE);
+    hud_timer_show_seconds = CVAR_CREATE("hud_timer_clock_show_sec", "1", FCVAR_ARCHIVE);
 	gHUD.AddHudElem(this);
 	
 	// Initialize member variables
@@ -82,7 +84,7 @@ int CHudTimer::VidInit()
     m_iReceivedPacketsCount = 0;
     memset(m_szPacketBuffer, 0, sizeof(m_szPacketBuffer));
 
-    if (g_timerSocket != 0)
+    if (g_timerSocket != 0) 
     {
         NetCloseSocket(g_timerSocket);
         g_timerSocket = 0;
@@ -108,14 +110,51 @@ int CHudTimer::Draw(float time)
 		
 		::time(&rawtime);
 		timeinfo = ::localtime(&rawtime);
-		
-		// Format: HH:MM:SS
-		sprintf(str, "%02d:%02d:%02d", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+
+		int hour = timeinfo->tm_hour;
+		int minute = timeinfo->tm_min;
+		int second = timeinfo->tm_sec;
+
+        if (hud_timer_show_seconds && hud_timer_show_seconds->value != 0.0f) {
+            if (hud_timer_24f && hud_timer_24f->value != 1.0f) {
+                const char* ampm = "AM";
+                if (hour >= 12)
+                    ampm = "PM";
+                if (hour == 0)
+                    hour = 12;
+                else if (hour > 12)
+                    hour -= 12;
+                // Format: HH:MM:SS AM/PM
+                sprintf(str, "%02d:%02d:%02d %s", hour, minute, second, ampm);
+            }
+            else {
+                // Format: HH:MM:SS (24-hour)
+                sprintf(str, "%02d:%02d:%02d", hour, minute, second);
+            }
+        }
+        else
+        {
+            if (hud_timer_24f && hud_timer_24f->value != 1.0f) {
+                const char* ampm = "AM";
+                if (hour >= 12)
+                    ampm = "PM";
+                if (hour == 0)
+                    hour = 12;
+                else if (hour > 12)
+                    hour -= 12;
+                // Format: HH:MM:SS AM/PM
+                sprintf(str, "%02d:%02d %s", hour, minute, ampm);
+            }
+            else {
+                // Format: HH:MM:SS (24-hour)
+                sprintf(str, "%02d:%02d", hour, minute);
+            }
+        }
 		
 		int r, g, b;
 		UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-        if (hud_timer_height->value > 0.0f) {
-            y = hud_timer_height->value;
+		if (hud_timer_height->value > 0.0f) {
+			y = hud_timer_height->value;
 		}
 		gHUD.DrawHudStringCentered(x, y, str, r, g, b);
 		return 1;
@@ -278,8 +317,8 @@ void CHudTimer::Think()
 {
     float flTime = gEngfuncs.GetClientTime();
 
-    if (m_flNextSyncTime - flTime > 60.0f) 
-        m_flNextSyncTime = flTime; 
+    if (m_flNextSyncTime - flTime > 60.0f)
+        m_flNextSyncTime = flTime;
 
     if (m_pCvarHudTimerSync != nullptr && m_pCvarHudTimerSync->value > 0.0f && m_flNextSyncTime <= flTime)
         SyncTimer(flTime);
@@ -288,22 +327,22 @@ void CHudTimer::Think()
 void CHudTimer::SyncTimer(float fTime)
 {
 
-    if (m_pCvarHudTimerSync == nullptr || m_pCvarHudTimerSync->value == 0.0f) 
+    if (m_pCvarHudTimerSync == nullptr || m_pCvarHudTimerSync->value == 0.0f)
     {
         m_flSynced = false;
         return;
     }
 
-    if (NET_API) 
+    if (NET_API)
     {
         NET_API->InitNetworking();
 
         net_status_t status;
-        NET_API->Status(&status); 
+        NET_API->Status(&status);
 
         if (status.connected)
         {
-            if (status.remote_address.type == NA_IP) 
+            if (status.remote_address.type == NA_IP)
             {
                 SyncTimerRemote(*(unsigned int *)status.remote_address.ip, status.remote_address.port, fTime, status.latency);
                 if (g_eRulesRequestStatus == SOCKET_AWAITING_CODE || g_eRulesRequestStatus == SOCKET_AWAITING_ANSWER)
@@ -315,7 +354,7 @@ void CHudTimer::SyncTimer(float fTime)
             {
                 if (m_pCvarMpTimelimit && m_pCvarMpTimeleft)
                 {
-                    m_flEndTime = m_pCvarMpTimelimit->value * 60.0f; 
+                    m_flEndTime = m_pCvarMpTimelimit->value * 60.0f;
 
                     if (!m_bDelayTimeleftReading)
                     {
@@ -323,23 +362,23 @@ void CHudTimer::SyncTimer(float fTime)
                         if (timeleft_cvar > 0)
                         {
                             float endtime_calculated_from_timeleft = timeleft_cvar + fTime;
-
                             if (fabs(m_flEndTime - endtime_calculated_from_timeleft) > 1.5f || m_flEndTime == 0)
                             {
                                 m_flEndTime = endtime_calculated_from_timeleft;
                             }
-                            m_flSynced = true; 
+                            m_flSynced = true;
                         }
-                        else if (m_flEndTime > 0) {
+                        else if (m_flEndTime > 0) { 
+
                         }
                     }
                 }
-                m_flNextSyncTime = fTime + 5.0f; 
+                m_flNextSyncTime = fTime + 5.0f;
             }
-            else 
+            else
             {
-                m_flSynced = false; 
-                m_flNextSyncTime = fTime + 1.0f; 
+                m_flSynced = false;
+                m_flNextSyncTime = fTime + 1.0f;
             }
 
             if (m_bDelayTimeleftReading)
@@ -348,7 +387,7 @@ void CHudTimer::SyncTimer(float fTime)
                 m_flNextSyncTime = fTime + 1.5f;
             }
         }
-        else 
+        else
         {
             m_flSynced = false;
             if (g_timerSocket != 0)
@@ -357,85 +396,86 @@ void CHudTimer::SyncTimer(float fTime)
                 g_timerSocket = 0;
                 g_eRulesRequestStatus = SOCKET_NONE;
             }
-            m_flNextSyncTime = fTime + 1.0f; 
+            m_flNextSyncTime = fTime + 1.0f;
         }
     }
-    else 
+    else
     {
         m_flSynced = false;
-        m_flNextSyncTime = fTime + 5.0f; 
+        m_flNextSyncTime = fTime + 5.0f;
     }
 }
 
 void CHudTimer::SyncTimerRemote(unsigned int ip, unsigned short port, float fTime, double latency)
 {
-    char buffer[2048]; 
+    // float prevEndtime = m_flEndTime;
+    char buffer[2048];
     int len = 0;
 
     if (fTime - m_flNextSyncTime > 3.0f && (g_eRulesRequestStatus == SOCKET_AWAITING_CODE || g_eRulesRequestStatus == SOCKET_AWAITING_ANSWER))
     {
-        g_eRulesRequestStatus = SOCKET_IDLE; 
-        NetCloseSocket(g_timerSocket); 
+        g_eRulesRequestStatus = SOCKET_IDLE;
+        NetCloseSocket(g_timerSocket);
         g_timerSocket = 0;
     }
 
     switch (g_eRulesRequestStatus)
     {
-    case SOCKET_NONE: 
-    case SOCKET_IDLE: 
+    case SOCKET_NONE:
+
+    case SOCKET_IDLE:
         m_iResponceID = 0;
         m_iReceivedSize = 0;
         m_iReceivedPackets = 0;
         m_iReceivedPacketsCount = 0;
         memset(m_szPacketBuffer, 0, sizeof(m_szPacketBuffer));
 
-        if (g_timerSocket != 0) { 
-             NetClearSocket(g_timerSocket); 
+        if (g_timerSocket != 0) {
+             NetClearSocket(g_timerSocket);
         }
         NetSendUdp(ip, port, "\xFF\xFF\xFF\xFFV\xFF\xFF\xFF\xFF", 9, &g_timerSocket);
         g_eRulesRequestStatus = SOCKET_AWAITING_CODE;
-        m_flNextSyncTime = fTime; 
+        m_flNextSyncTime = fTime;
         return;
 
-    case SOCKET_AWAITING_CODE: 
+    case SOCKET_AWAITING_CODE:
         len = NetReceiveUdp(ip, port, buffer, sizeof(buffer), g_timerSocket);
-        if (len < 5) 
+        if (len < 5)
             return;
-
 
         if (*(int *)buffer == -1 && buffer[4] == 'A' && len == 9)
         {
-            buffer[4] = 'V'; 
+            buffer[4] = 'V';
             NetSendUdp(ip, port, buffer, 9, &g_timerSocket);
 
 
             g_eRulesRequestStatus = SOCKET_AWAITING_ANSWER;
-            m_flNextSyncTime = fTime; 
+            m_flNextSyncTime = fTime;
             return;
         }
         g_eRulesRequestStatus = SOCKET_AWAITING_ANSWER;
-        break; 
+        break;
 
-    case SOCKET_AWAITING_ANSWER: 
+    case SOCKET_AWAITING_ANSWER:
         len = NetReceiveUdp(ip, port, buffer, sizeof(buffer), g_timerSocket);
-        if (len < 5) 
+        if (len < 5)
             return;
-        break; 
+        break;
     }
 
-
-    if (*(int *)buffer == -2 ) 
+    if (*(int *)buffer == -2 )
     {
         if (len < 9) return; 
 
+        // Перевірка ID запиту та номера пакета
         int requestID = *(int *)(buffer + 4);
         unsigned char headerInfo = buffer[8];
-        int currentPacket = headerInfo >> 4;
-        int totalPackets = headerInfo & 0x0F; 
+        int currentPacket = headerInfo >> 4; 
+        int totalPackets = headerInfo & 0x0F;
 
         if (currentPacket >= totalPackets) return;
 
-        if (m_iReceivedPacketsCount == 0) 
+        if (m_iReceivedPacketsCount == 0)
         {
             m_iResponceID = requestID;
         }
@@ -444,7 +484,7 @@ void CHudTimer::SyncTimerRemote(unsigned int ip, unsigned short port, float fTim
             return;
         }
 
-        if (m_iReceivedPackets & (1 << currentPacket)) return; 
+        if (m_iReceivedPackets & (1 << currentPacket)) return;
 
         int dataOffset = (1400 - 9) * currentPacket; 
         if (dataOffset + (len - 9) > sizeof(m_szPacketBuffer)) return; 
@@ -454,13 +494,13 @@ void CHudTimer::SyncTimerRemote(unsigned int ip, unsigned short port, float fTim
         m_iReceivedPackets |= (1 << currentPacket);
         m_iReceivedPacketsCount++;
 
-        if (m_iReceivedPacketsCount < totalPackets) return; 
+        if (m_iReceivedPacketsCount < totalPackets) return;
     }
-    else if (*(int *)buffer == -1 && buffer[4] == 'E') 
+    else if (*(int *)buffer == -1 && buffer[4] == 'E')
     {
-        if (len > sizeof(m_szPacketBuffer)) return; 
-        memcpy(m_szPacketBuffer, buffer, len); 
-        m_iReceivedSize = len; 
+        if (len > sizeof(m_szPacketBuffer)) return;
+        memcpy(m_szPacketBuffer, buffer, len);
+        m_iReceivedSize = len;
     }
     else
     {
@@ -473,28 +513,28 @@ void CHudTimer::SyncTimerRemote(unsigned int ip, unsigned short port, float fTim
     if (*(int *)m_szPacketBuffer != -1 || m_szPacketBuffer[4] != 'E')
     {
         g_eRulesRequestStatus = SOCKET_IDLE;
-         NetCloseSocket(g_timerSocket); 
+         NetCloseSocket(g_timerSocket);
          g_timerSocket = 0;
         return;
     }
 
     m_flSynced = true;
-    g_eRulesRequestStatus = SOCKET_IDLE; 
-    m_flNextSyncTime = fTime + 10.0f; 
+    g_eRulesRequestStatus = SOCKET_IDLE;
+    m_flNextSyncTime = fTime + 10.0f;
 
     char *value;
 
     value = NetGetRuleValueFromBuffer(m_szPacketBuffer, m_iReceivedSize, "mp_timelimit");
     if (value && value[0])
     {
-        m_flEndTime = atof(value) * 60; 
+        m_flEndTime = atof(value) * 60;
     }
     else
     {
-        m_flEndTime = 0; 
+        m_flEndTime = 0;
     }
 
-    if (!m_bDelayTimeleftReading) 
+    if (!m_bDelayTimeleftReading)
     {
         value = NetGetRuleValueFromBuffer(m_szPacketBuffer, m_iReceivedSize, "mp_timeleft");
         if (value && value[0])
@@ -511,7 +551,6 @@ void CHudTimer::SyncTimerRemote(unsigned int ip, unsigned short port, float fTim
             }
         }
     }
-	
     m_iReceivedSize = 0;
     m_iReceivedPackets = 0;
     m_iReceivedPacketsCount = 0;
