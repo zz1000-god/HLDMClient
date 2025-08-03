@@ -975,6 +975,15 @@ void CStudioModelRenderer::StudioSetupBones ( void )
 
 		if (pbones[i].parent == -1) 
 		{
+			extern cvar_t* cl_righthand;
+			if (m_pCurrentEntity == gEngfuncs.GetViewModel()
+				&& IEngineStudio.IsHardware()
+				&& cl_righthand->value > 0.0f)
+			{
+				for (size_t j = 0; j < 4; ++j)
+					bonematrix[1][j] *= -1.0;
+			}
+
 			if ( IEngineStudio.IsHardware() )
 			{
 				ConcatTransforms ((*m_protationmatrix), bonematrix, (*m_pbonetransform)[i]);
@@ -1069,7 +1078,7 @@ void CStudioModelRenderer::StudioMergeBones ( model_t *m_pSubModel )
 	{
 		for (j = 0; j < m_nCachedBones; j++)
 		{
-			if (stricmp(pbones[i].name, m_nCachedBoneNames[j]) == 0)
+			if (_stricmp(pbones[i].name, m_nCachedBoneNames[j]) == 0)
 			{
 				MatrixCopy( m_rgCachedBoneTransform[j], (*m_pbonetransform)[i] );
 				MatrixCopy( m_rgCachedLightTransform[j], (*m_plighttransform)[i] );
