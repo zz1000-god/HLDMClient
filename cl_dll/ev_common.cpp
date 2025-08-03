@@ -25,6 +25,11 @@
 #include "event_api.h"
 #include "pm_shared.h"
 
+extern cvar_t* cl_viewmodel_ofs_right;
+extern cvar_t* cl_viewmodel_ofs_forward;
+extern cvar_t* cl_viewmodel_ofs_up;
+
+
 #define IS_FIRSTPERSON_SPEC ( g_iUser1 == OBS_IN_EYE || (g_iUser1 && (gHUD.m_Spectator.m_pip->value == INSET_IN_EYE)) )
 /*
 =================
@@ -157,6 +162,8 @@ void EV_GetDefaultShellInfo( event_args_t *args, float *origin, float *velocity,
 
 	int idx;
 
+	extern cvar_t* cl_righthand;
+
 	idx = args->entindex;
 
 	VectorClear( view_ofs );
@@ -176,6 +183,21 @@ void EV_GetDefaultShellInfo( event_args_t *args, float *origin, float *velocity,
 
 	fR = gEngfuncs.pfnRandomFloat( 50, 70 );
 	fU = gEngfuncs.pfnRandomFloat( 100, 150 );
+
+	bool bIsFirstPerson = EV_IsPlayer(idx) && EV_IsLocal(idx);
+
+	if (bIsFirstPerson)
+	{
+		rightScale += cl_viewmodel_ofs_right->value;
+		forwardScale += cl_viewmodel_ofs_forward->value;
+		upScale += cl_viewmodel_ofs_up->value;
+
+		if (cl_righthand->value > 0.0f)
+		{
+			fR *= -1;
+			rightScale *= -1;
+		}
+	}
 
 	for ( i = 0; i < 3; i++ )
 	{
