@@ -128,6 +128,17 @@ ScorePanel::ScorePanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 	m_TitleLabel.setContentFitted(false);
 	m_TitleLabel.setParent(this);
 
+	m_MapLabel.setFont(smallfont);
+	m_MapLabel.setText("");
+	m_MapLabel.setBgColor(0, 0, 0, 255);
+	m_MapLabel.setFgColor(Scheme::sc_primary1);
+	m_MapLabel.setContentAlignment(vgui::Label::a_west);
+
+	int mapLabelY = 4 + SBOARD_TITLE_SIZE_Y - 2;
+	m_MapLabel.setBounds(xpos, mapLabelY, wide, 20);
+	m_MapLabel.setContentFitted(false);
+	m_MapLabel.setParent(this);
+
 	// Setup the header (labels like "name", "class", etc..).
 	m_HeaderGrid.SetDimensions(NUM_COLUMNS, 1);
 	m_HeaderGrid.SetSpacing(0, 0);
@@ -181,7 +192,8 @@ ScorePanel::ScorePanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 	m_HeaderGrid.SetColumnWidth(NUM_COLUMNS - 1, (wide - X_BORDER) - (ex + ew));
 
 	m_HeaderGrid.AutoSetRowHeights();
-	m_HeaderGrid.setBounds(X_BORDER, SBOARD_TITLE_SIZE_Y, wide - X_BORDER*2, m_HeaderGrid.GetRowHeight(0));
+	//m_HeaderGrid.setBounds(X_BORDER, SBOARD_TITLE_SIZE_Y, wide - X_BORDER*2, m_HeaderGrid.GetRowHeight(0));
+	m_HeaderGrid.setBounds(X_BORDER, SBOARD_TITLE_SIZE_Y + 10, wide - X_BORDER * 2, m_HeaderGrid.GetRowHeight(0));
 	m_HeaderGrid.setParent(this);
 	m_HeaderGrid.setBgColor(0,0,0,255);
 
@@ -271,6 +283,33 @@ void ScorePanel::Update()
 		char sz[MAX_SERVERNAME_LENGTH + 16];
 		sprintf(sz, "%s", gViewPort->m_szServerName );
 		m_TitleLabel.setText(sz);
+	}
+
+	char mapName[64];
+	const char* currentMap = gEngfuncs.pfnGetLevelName();
+	if (currentMap && strlen(currentMap) > 0)
+	{
+		const char* mapFileName = strrchr(currentMap, '/');
+		if (!mapFileName)
+			mapFileName = strrchr(currentMap, '\\');
+
+		if (mapFileName)
+			mapFileName++;
+		else
+			mapFileName = currentMap;
+
+		strncpy(mapName, mapFileName, sizeof(mapName) - 1);
+		mapName[sizeof(mapName) - 1] = '\0';
+
+		char* dot = strrchr(mapName, '.');
+		if (dot && !_stricmp(dot, ".bsp"))
+			*dot = '\0';
+
+		m_MapLabel.setText(mapName);
+	}
+	else
+	{
+		m_MapLabel.setText("Unknown");
 	}
 
 	m_iRows = 0;
