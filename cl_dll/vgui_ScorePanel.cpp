@@ -134,7 +134,7 @@ ScorePanel::ScorePanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 	m_MapLabel.setFgColor(Scheme::sc_primary1);
 	m_MapLabel.setContentAlignment(vgui::Label::a_west);
 
-	int mapLabelY = 4 + SBOARD_TITLE_SIZE_Y - 2;
+	int mapLabelY = SBOARD_TITLE_SIZE_Y;
 	m_MapLabel.setBounds(xpos, mapLabelY, wide, 20);
 	m_MapLabel.setContentFitted(false);
 	m_MapLabel.setParent(this);
