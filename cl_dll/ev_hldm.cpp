@@ -35,6 +35,8 @@
 #include "r_studioint.h"
 #include "com_model.h"
 
+extern cvar_t* cl_righthand;
+
 extern engine_studio_api_t IEngineStudio;
 
 static int tracerCount[ 32 ];
@@ -1401,7 +1403,7 @@ enum EGON_FIREMODE { FIRE_NARROW, FIRE_WIDE};
 #define EGON_SOUND_RUN			"weapons/egon_run3.wav"
 #define EGON_SOUND_STARTUP		"weapons/egon_windup2.wav"
 
-#define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
+//#define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
 
 BEAM *pBeam;
 BEAM *pBeam2;
