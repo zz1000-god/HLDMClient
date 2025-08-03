@@ -50,6 +50,12 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
 
 ### View changes
   - Added `cl_viewmodel_fov` like in OpenAG
+  - Added `cl_viewmodel_ofs_forward` like in OpenAG
+  - Added `cl_viewmodel_ofs_up` like in OpenAG
+  - Added `cl_viewmodel_ofs_right` like in OpenAG
+  - Added `cl_righthand` like in OpenAG
+  - Added `cl_hl2_bob` weapon bob like in Half-Life 2
+  - Added `cl_hl2_weaponlag` weapon laging like in Half-Life 2
   - Added `cl_disable_deadcam` like in AG6.6U
   - Added `cl_oldbob` weapon bob like in pre HL25 update
 
