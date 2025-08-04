@@ -120,6 +120,27 @@ static size_t count_digits(int n)
 	return result;
 }
 
+static size_t get_map_name(char* dest, size_t count)
+{
+	auto map_path = gEngfuncs.pfnGetLevelName();
+
+	const char* slash = strrchr(map_path, '/');
+	if (!slash)
+		slash = map_path - 1;
+
+	const char* dot = strrchr(map_path, '.');
+	if (!dot)
+		dot = map_path + strlen(map_path);
+
+	size_t bytes_to_copy = min(count - 1, static_cast<size_t>(dot - slash - 1));
+
+	strncpy(dest, slash + 1, bytes_to_copy);
+	dest[bytes_to_copy] = '\0';
+
+	return bytes_to_copy;
+}
+
+
 inline int DrawConsoleString( int x, int y, const char *string )
 {
 	return gEngfuncs.pfnDrawConsoleString( x, y, (char*) string );
