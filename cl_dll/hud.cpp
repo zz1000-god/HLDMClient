@@ -34,6 +34,7 @@
 #include "useslowdown.h"
 #include "forcemodel.h"
 #include "net_api.h"
+#include <ctime>
 
 hud_player_info_t	 g_PlayerInfoList[MAX_PLAYERS+1];	   // player info from the engine
 extra_player_info_t  g_PlayerExtraInfo[MAX_PLAYERS+1];   // additional player info sent directly to the client dll
@@ -88,6 +89,7 @@ extern client_sprite_t *GetSpriteList(client_sprite_t *pList, const char *psz, i
 extern float IN_GetMouseSensitivity();
 
 cvar_t *cl_lw = NULL;
+cvar_t* hud_watermark;
 
 void ShutdownInput (void);
 
@@ -284,6 +286,54 @@ int __MsgFunc_AllowSpec(const char *pszName, int iSize, void *pbuf)
 		return gViewPort->MsgFunc_AllowSpec( pszName, iSize, pbuf );
 	return 0;
 }
+
+void __CmdFunc_Agrecord()
+{
+	/*
+	 * Yay overcomplicating stuff.
+	 * All this code makes sure we can fit as much as possible into cmd.
+	 */
+
+	char cmd[256];
+	cmd[ARRAYSIZE(cmd) - 1] = '\0';
+
+	std::time_t curtime = std::time(nullptr);
+
+	auto written = std::strftime(cmd, sizeof(cmd), "record %Y%m%d_%H%M%S_", std::localtime(&curtime));
+	if (written > 0) {
+		char mapname[256];
+		auto mapname_len = get_map_name(mapname, ARRAYSIZE(mapname));
+
+		/*
+		 * We want to leave at least one more byte for '\0'.
+		 * written does not include the '\0'.
+		 * written is strictly less than sizeof(cmd).
+		 * The maximal value for written is sizeof(cmd) - 1.
+		 * So if we wrote ARRAYSIZE(cmd) - 1 bytes, we have no extra bytes left.
+		 */
+		mapname_len = min(mapname_len, ARRAYSIZE(cmd) - written - 1);
+		strncpy(cmd + written, mapname, mapname_len);
+
+		cmd[written + mapname_len] = '\0';
+
+		if (gEngfuncs.Cmd_Argc() >= 2) {
+			size_t bytes_left = ARRAYSIZE(cmd) - written - 1 - mapname_len;
+			if (bytes_left >= 2) {
+				cmd[written + mapname_len] = '_';
+
+				auto arg_len = strlen(gEngfuncs.Cmd_Argv(1));
+				auto bytes_to_write = min(arg_len, bytes_left - 1);
+
+				strncpy(cmd + written + mapname_len + 1, gEngfuncs.Cmd_Argv(1), bytes_to_write);
+
+				cmd[written + mapname_len + 1 + bytes_to_write] = '\0';
+			}
+		}
+
+		gEngfuncs.pfnClientCmd(cmd);
+	}
+}
+
 void __CmdFunc_Append()
 {
 	if (gEngfuncs.Cmd_Argc() != 2) {
@@ -438,6 +488,8 @@ void CHud :: Init( void )
 
 	HOOK_COMMAND("append", Append);
 
+	HOOK_COMMAND("agrecord", Agrecord);
+
 	EngineClientCmd("alias zpecial \"append _zpecial\"");
 	force_model::hook_commands();
 
@@ -458,6 +510,7 @@ void CHud :: Init( void )
 	m_pCvarHideCorpses = CVAR_CREATE("cl_hidecorpses", "0", FCVAR_ARCHIVE);
 	cl_useslowdown = CVAR_CREATE("cl_useslowdown", "0", FCVAR_ARCHIVE);
 	cl_sprite = CVAR_CREATE("cl_sprite", "640", FCVAR_ARCHIVE);
+	hud_watermark = CVAR_CREATE("hud_watermark", "1", FCVAR_ARCHIVE);
 
 	gEngfuncs.pfnAddCommand("joinlast", joinlast);
 
