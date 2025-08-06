@@ -547,6 +547,7 @@ void CHud :: Init( void )
 	m_TextMessage.Init();
 	m_StatusIcons.Init();
 	m_Speedometer.Init();
+	m_Jumpspeed.Init();
 	m_Crosshairs.Init();
 	m_Timer.Init();
 	m_Scores.Init();
@@ -716,6 +717,7 @@ void CHud :: VidInit( void )
 	m_StatusIcons.VidInit();
 	GetClientVoiceMgr()->VidInit();
 	m_Speedometer.VidInit();
+	m_Jumpspeed.VidInit();
 	m_Crosshairs.VidInit();
 	m_Timer.VidInit();
 	m_Scores.VidInit();
