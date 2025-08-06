@@ -97,6 +97,7 @@ struct HUDLIST {
 #include "hud_scores.h"
 #include "hud_oldscoreboard.h"
 #include "hud_fps.h"
+#include "hud_jumpspeed.h"
 
 //
 //-----------------------------------------------------
@@ -665,6 +666,7 @@ public:
 	CHudStatusIcons m_StatusIcons;
 	CHudBenchmark	m_Benchmark;
 	CHudSpeedometer m_Speedometer;
+	CHudJumpspeed   m_Jumpspeed;
 	CHudCrosshairs  m_Crosshairs;
 	CHudTimer		m_Timer;
 	CHudScores		m_Scores;
