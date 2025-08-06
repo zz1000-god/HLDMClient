@@ -48,6 +48,7 @@ int CHudTimer::Init()
 	m_pCvarHudTimerSync = CVAR_CREATE("hud_timer_sync", "1", FCVAR_ARCHIVE);
     hud_timer_24f = CVAR_CREATE("hud_timer_clock_24f", "1", FCVAR_ARCHIVE);
     hud_timer_show_seconds = CVAR_CREATE("hud_timer_clock_show_sec", "1", FCVAR_ARCHIVE);
+    hud_nextmap = CVAR_CREATE("hud_nextmap", "1", FCVAR_ARCHIVE);
 	gHUD.AddHudElem(this);
 	
 	// Initialize member variables
@@ -83,6 +84,7 @@ int CHudTimer::VidInit()
     m_iReceivedPackets = 0;
     m_iReceivedPacketsCount = 0;
     memset(m_szPacketBuffer, 0, sizeof(m_szPacketBuffer));
+    memset(m_szNextMap, 0, sizeof(m_szNextMap));
 
     if (g_timerSocket != 0) 
     {
@@ -101,6 +103,10 @@ int CHudTimer::Draw(float time)
 
 	if (gHUD.m_iHideHUDDisplay & HIDEHUD_ALL)
 		return 0;
+
+    if (hud_nextmap->value > 0.0f) {
+        DrawNextMap(time);
+    }
 
 	// Handle local time display (hud_timer = 3)
 	if (hud_timer->value == 3.0f) {
@@ -290,6 +296,45 @@ int CHudTimer::Draw(float time)
 	gHUD.DrawHudStringCentered(x, y, str, r, g, b);
 
 	return 1;
+}
+
+void CHudTimer::DrawNextMap(float time)
+{
+    // Check if nextmap display is enabled
+    if (!hud_nextmap || hud_nextmap->value == 0.0f)
+        return;
+
+    // Don't draw if HUD is hidden
+    if (gHUD.m_iHideHUDDisplay & HIDEHUD_ALL)
+        return;
+
+    // Don't draw if no nextmap data
+    if (m_szNextMap[0] == '\0')
+        return;
+
+    // Calculate timeleft to determine when to show
+    float timeleft = 0.0f;
+    if (m_flSynced && hud_timer && hud_timer->value == 1.0f)
+    {
+        timeleft = m_flEndTime - time;
+    }
+
+    // Prepare display text
+    char str[128];
+    sprintf(str, "Nextmap: %s", m_szNextMap);
+
+    // Position at bottom center of screen
+    int x = ScreenWidth / 2;
+    int y = gHUD.m_scrinfo.iCharHeight * 3;
+
+    // Color settings
+    int r, g, b;
+    UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
+
+    // Draw the nextmap text
+    if (timeleft >= 30 && timeleft < 60) {
+        gHUD.DrawHudStringCentered(x, y, str, r, g, b);
+    }
 }
 
 int CHudTimer::MsgFunc_Timer(const char* name, int size, void* buf)
@@ -551,6 +596,16 @@ void CHudTimer::SyncTimerRemote(unsigned int ip, unsigned short port, float fTim
             }
         }
     }
+    char* valuem = NetGetRuleValueFromBuffer(m_szPacketBuffer, m_iReceivedSize, "amx_nextmap");
+    if (valuem && valuem[0])
+    {
+        strncpy(m_szNextMap, valuem, sizeof(m_szNextMap) - 1);
+        m_szNextMap[sizeof(m_szNextMap) - 1] = '\0';
+    }
+    else
+    {
+        m_szNextMap[0] = '\0'; // Clear nextmap if not found
+    }
     m_iReceivedSize = 0;
     m_iReceivedPackets = 0;
     m_iReceivedPacketsCount = 0;
@@ -562,4 +617,5 @@ void CHudTimer::DoResync()
 	m_bDelayTimeleftReading = true;
 	m_flNextSyncTime = 0;
 	m_flSynced = false;
+    m_szNextMap[0] = '\0';
 }
