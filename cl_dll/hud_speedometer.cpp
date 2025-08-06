@@ -51,7 +51,17 @@ int CHudSpeedometer::Draw(float time)
 		if (hud_speedometer_below_cross->value != 0.0f)
 			y = ScreenHeight / 2 + gHUD.m_iFontHeight / 2;
 		else
-			y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+		{
+			cvar_t* hud_jumpspeed = gEngfuncs.pfnGetCvarPointer("hud_jumpspeed");
+			if (hud_jumpspeed && hud_jumpspeed->value == 0.0f)
+			{
+				y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+			}
+			else
+			{
+				y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2 - gHUD.m_iFontHeight;
+			}
+		}
 	}
 
 	gHUD.DrawHudNumberCentered(x, y, speed, r, g, b);
