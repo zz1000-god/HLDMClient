@@ -15,6 +15,7 @@ private:
 	void SyncTimer(float fTime);
 	void DoResync();
 	void SyncTimerRemote(unsigned int ip, unsigned short port, float fTime, double latency);
+	void DrawNextMap(float time);
 
 	// Message data
 	int seconds_total;
@@ -34,6 +35,7 @@ private:
 	cvar_t* hud_timer_height;
 	cvar_t* hud_timer_24f;
 	cvar_t* hud_timer_show_seconds;
+	cvar_t* hud_nextmap;
 	cvar_t* m_pCvarHudTimerSync;
 	cvar_t* m_pCvarMpTimelimit;
 	cvar_t* m_pCvarMpTimeleft;
@@ -44,4 +46,6 @@ private:
 	int m_iResponceID;         
 	int m_iReceivedPackets;    
 	int m_iReceivedPacketsCount;
+
+	char m_szNextMap[64];
 };
