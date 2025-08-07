@@ -553,6 +553,7 @@ void CHud :: Init( void )
 	m_Scores.Init();
 	m_OldScoreBoard.Init();
 	m_FPS.Init();
+	m_Rainbow.Init();
 
 	GetClientVoiceMgr()->Init(&g_VoiceStatusHelper, (vgui::Panel**)&gViewPort);
 
