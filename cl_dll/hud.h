@@ -98,6 +98,7 @@ struct HUDLIST {
 #include "hud_oldscoreboard.h"
 #include "hud_fps.h"
 #include "hud_jumpspeed.h"
+#include "rainbow.h"
 
 //
 //-----------------------------------------------------
@@ -346,6 +347,8 @@ private:
 	struct cvar_s *	m_HUD_saytext;
 	struct cvar_s *	m_HUD_saytext_time;
 	struct cvar_s* m_HUD_saytext_sound;
+	struct cvar_s* m_HUD_rainbow_chat;
+	struct cvar_s* m_HUD_saytext_sound_path;
 };
 
 //
@@ -672,6 +675,7 @@ public:
 	CHudScores		m_Scores;
 	CHudOldScoreboard m_OldScoreBoard;
 	CHudFPS			m_FPS;
+	CRainbow		m_Rainbow;
 
 	void Init( void );
 	void VidInit( void );
