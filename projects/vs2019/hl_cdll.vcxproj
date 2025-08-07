@@ -162,6 +162,7 @@
     <ClCompile Include="..\..\cl_dll\menu.cpp" />
     <ClCompile Include="..\..\cl_dll\message.cpp" />
     <ClCompile Include="..\..\cl_dll\net_windows.cpp" />
+    <ClCompile Include="..\..\cl_dll\rainbow.cpp" />
     <ClCompile Include="..\..\cl_dll\saytext.cpp" />
     <ClCompile Include="..\..\cl_dll\statusbar.cpp" />
     <ClCompile Include="..\..\cl_dll\status_icons.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="..\..\cl_dll\vgui_ServerBrowser.cpp" />
     <ClCompile Include="..\..\cl_dll\vgui_SpectatorPanel.cpp" />
     <ClCompile Include="..\..\cl_dll\vgui_TeamFortressViewport.cpp" />
+    <ClCompile Include="..\..\cl_dll\vgui_UnicodeTextImage.cpp" />
     <ClCompile Include="..\..\cl_dll\vgui_teammenu.cpp" />
     <ClCompile Include="..\..\cl_dll\view.cpp" />
     <ClCompile Include="..\..\cl_dll\voice_status.cpp" />
@@ -245,6 +247,7 @@
     <ClInclude Include="..\..\cl_dll\net.h" />
     <ClInclude Include="..\..\cl_dll\netadr.h" />
     <ClInclude Include="..\..\cl_dll\net_api.h" />
+    <ClInclude Include="..\..\cl_dll\rainbow.h" />
     <ClInclude Include="..\..\cl_dll\player_info.h" />
     <ClInclude Include="..\..\cl_dll\StudioModelRenderer.h" />
     <ClInclude Include="..\..\cl_dll\tri.h" />
@@ -257,6 +260,7 @@
     <ClInclude Include="..\..\cl_dll\vgui_ServerBrowser.h" />
     <ClInclude Include="..\..\cl_dll\vgui_SpectatorPanel.h" />
     <ClInclude Include="..\..\cl_dll\vgui_TeamFortressViewport.h" />
+    <ClInclude Include="..\..\cl_dll\vgui_UnicodeTextImage.h" />
     <ClInclude Include="..\..\cl_dll\view.h" />
     <ClInclude Include="..\..\cl_dll\wrect.h" />
     <ClInclude Include="..\..\common\parsemsg.h" />
