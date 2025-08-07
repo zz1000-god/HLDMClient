@@ -481,6 +481,24 @@ void UnicodeTextImage::setPos(int x, int y)
 	BaseClass::setPos(x, y);
 }
 
+void GetColorByIndex(int index, int& r, int& g, int& b)
+{
+	switch (index)
+	{
+	case 0: r = 255; g = 160; b = 0;   break;
+	case 1: r = 255; g = 0;   b = 0;   break;
+	case 2: r = 0;   g = 255; b = 0;   break;
+	case 3: r = 255; g = 255; b = 0;   break;
+	case 4: r = 0;   g = 0;   b = 255; break;
+	case 5: r = 0;   g = 255; b = 255; break;
+	case 6: r = 255; g = 0;   b = 255; break;
+	case 7: r = 136; g = 136; b = 136; break;
+	case 8: r = 255; g = 255; b = 255; break;
+	case 9: r = 255; g = 160; b = 0;   break;
+	default: r = 255; g = 160; b = 0;  break;
+	}
+}
+
 void UnicodeTextImage::paint(vgui::Panel* panel)
 {
 	if (shouldFallback())
@@ -557,6 +575,20 @@ void UnicodeTextImage::paint(vgui::Panel* panel)
 		// Ignore linebreaks
 		if (ch == L'\r' || ch == L'\n')
 			continue;
+
+		// Check for color tag like ^1 to ^9
+		if (ch == L'^' && i + 1 < m_Text.size())
+		{
+			wchar_t nextChar = m_Text[i + 1];
+			if (nextChar >= L'0' && nextChar <= L'9')
+			{
+				int colorIndex = nextChar - L'0';
+				GetColorByIndex(colorIndex, r, g, b); // <- Твоя функція кольорів
+				g_pVGuiSurface->DrawSetTextColor(r, g, b, 255);
+				i++; // Пропускаємо тег
+				continue;
+			}
+		}
 
 		if (bRainbowEnabled)
 		{
