@@ -849,15 +849,15 @@ void ScorePanel::FillGrid()
 
 					gHUD.AppendPlayerIfOnlyColorTags(name, sizeof(name));
 
-					char stripped_name[128];
-					color_tags::strip_color_tags(stripped_name, name, sizeof(stripped_name));
+					/*char stripped_name[128];
+					color_tags::strip_color_tags(stripped_name, name, sizeof(stripped_name));*/
 
 					// Check if player is spectator and add (S) suffix
 					if (g_IsSpectator[m_iSortedRows[row]] || started_drawing_spectators) {
-						sprintf(sz, "%s (S)  ", stripped_name);
+						sprintf(sz, "%s (S)  ", name);
 					}
 					else {
-						sprintf(sz, "%s  ", stripped_name);
+						sprintf(sz, "%s  ", name);
 					}
 				}
 					break;
