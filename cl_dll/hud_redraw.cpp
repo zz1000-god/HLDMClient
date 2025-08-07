@@ -47,6 +47,8 @@ void CHud::Think(void)
 	int newfov;
 	HUDLIST *pList = m_pHudList;
 
+	m_Rainbow.Think();
+
 	while (pList)
 	{
 		if (pList->p->m_iFlags & HUD_ACTIVE)
