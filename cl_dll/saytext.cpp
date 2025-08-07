@@ -59,6 +59,8 @@ int CHudSayText :: Init( void )
 	m_HUD_saytext =			gEngfuncs.pfnRegisterVariable( "hud_saytext", "1", 0 );
 	m_HUD_saytext_sound =	gEngfuncs.pfnRegisterVariable( "hud_saytext_sound", "0", FCVAR_ARCHIVE);
 	m_HUD_saytext_time =	gEngfuncs.pfnRegisterVariable( "hud_saytext_time", "5", 0 );
+	m_HUD_saytext_sound_path = gEngfuncs.pfnRegisterVariable("hud_saytext_sound_path", "misc/talk.wav", FCVAR_ARCHIVE);
+	m_HUD_rainbow_chat = gEngfuncs.pfnRegisterVariable("hud_rainbow_chat", "1", FCVAR_ARCHIVE);
 
 
 	m_iFlags |= HUD_INTERMISSION; // is always drawn during an intermission
@@ -103,6 +105,10 @@ int CHudSayText::Draw(float flTime)
 
 	if ((gViewPort && gViewPort->AllowedToPrintText() == FALSE) || !m_HUD_saytext->value)
 		return 1;
+
+	bool enableRainbow = m_HUD_rainbow_chat->value;
+	if (!enableRainbow)
+		gHUD.m_Rainbow.PushDisable();
 
 	// make sure the scrolltime is within reasonable bounds,  to guard against the clock being reset
 	flScrollTime = min(flScrollTime, flTime + m_HUD_saytext_time->value);
@@ -176,6 +182,9 @@ int CHudSayText::Draw(float flTime)
 
 		y += line_height;
 	}
+
+	if (!enableRainbow)
+		gHUD.m_Rainbow.PopDisable();
 
 	return 1;
 }
