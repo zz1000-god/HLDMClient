@@ -314,14 +314,14 @@ void CHudTimer::DrawNextMap(float time)
 
     // Calculate timeleft to determine when to show
     float timeleft = 0.0f;
-    if (m_flSynced && hud_timer && hud_timer->value == 1.0f)
+    if (m_flSynced && hud_timer && hud_timer->value > 0.0f)
     {
         timeleft = m_flEndTime - time;
     }
 
     // Prepare display text
     char str[128];
-    sprintf(str, "Nextmap: %s", m_szNextMap);
+    sprintf(str, "Next map: %s", m_szNextMap);
 
     // Position at bottom center of screen
     int x = ScreenWidth / 2;
@@ -331,8 +331,27 @@ void CHudTimer::DrawNextMap(float time)
     int r, g, b;
     UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
 
+    float a = 0.0f;
+    if (timeleft > 40.0f)
+    {
+        a = 255.0f;
+    }
+    else if (timeleft >= 30.0f)
+    {
+        a = (timeleft - 30.0f) / 10.0f * 255.0f;
+    }
+    else
+    {
+        a = 0.0f;
+    }
+    
+    if (a < 64.0f)
+        a = 0.0f;
+
+    ScaleColors(r, g, b, a);
+
     // Draw the nextmap text
-    if (timeleft >= 30 && timeleft < 60) {
+    if (timeleft > 0 && timeleft < 60) {
         gHUD.DrawHudStringCentered(x, y, str, r, g, b);
     }
 }
