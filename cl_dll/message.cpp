@@ -153,6 +153,10 @@ void CHudMessage::MessageScanNextChar( void )
 	destBlue = 0;
 	blend = 0;	// Pure source
 
+	if (gHUD.m_Rainbow.IsEnabled()) {
+		gHUD.m_Rainbow.GetRainbowColor(m_parms.x, m_parms.y, srcRed, srcGreen, srcBlue);
+	}
+
 	switch( m_parms.pMessage->effect )
 	{
 	// Fade-in / Fade-out
@@ -250,9 +254,10 @@ void CHudMessage::MessageScanStart( void )
 
 void CHudMessage::MessageDrawScan(client_textmessage_t* pMessage, float time)
 {
-	int i, j, length, width;
+	int i, length, width;
+	//int j;
 	const char* pText;
-	unsigned char line[80];
+	//unsigned char line[80];
 
 	pText = pMessage->pMessage;
 
