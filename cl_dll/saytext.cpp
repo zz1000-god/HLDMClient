@@ -259,7 +259,7 @@ void CHudSayText :: SayTextPrint( const char *pszBuf, int iBufSize, int clientIn
 	m_iFlags |= HUD_ACTIVE;
 
 	if (m_HUD_saytext_sound->value > 0.0f)
-		PlaySound( "misc/talk.wav", m_HUD_saytext_sound->value);
+		PlaySound(m_HUD_saytext_sound_path->string, m_HUD_saytext_sound->value);
 
 	Y_START = ScreenHeight - 60 - ( line_height * (MAX_LINES+2) );
 }
