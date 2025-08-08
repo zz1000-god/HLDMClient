@@ -95,7 +95,8 @@ int CHudFPS::Draw(float flTime)
             g = 255;
             b = 0;
         }
-        gHUD.DrawHudString(x, y, 200, sz, r, g, b);
+        gEngfuncs.pfnDrawSetTextColor(r / 255.0f, g / 255.0f, b / 255.0f);
+        DrawConsoleString(x, y, sz);
     }
     else if (hud_fps->value == 2){
         int r, g, b;
@@ -106,13 +107,14 @@ int CHudFPS::Draw(float flTime)
             g = 0;
             b = 0;
         }
-
-        gHUD.DrawHudString(x, y, 200, sz, r, g, b);
+        gEngfuncs.pfnDrawSetTextColor(r / 255.0f, g / 255.0f, b / 255.0f);
+        DrawConsoleString(x, y, sz);
     }
     else if (hud_fps->value == 3) {
         int r, g, b;
         UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-        gHUD.DrawHudString(x, y, 200, sz, r, g, b);
+        gEngfuncs.pfnDrawSetTextColor(r / 255.0f, g / 255.0f, b / 255.0f);
+        DrawConsoleString(x, y, sz);
     }
     return 0;
 }
