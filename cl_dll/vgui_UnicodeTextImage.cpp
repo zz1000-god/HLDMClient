@@ -483,19 +483,22 @@ void UnicodeTextImage::setPos(int x, int y)
 
 void GetColorByIndex(int index, int& r, int& g, int& b)
 {
-	switch (index)
+	static const int colors[][3] = {
+		{255, 0,   0},
+		{0,   255, 0},
+		{255, 255, 0},
+		{0,   0,   255},
+		{0,   255, 255},
+		{255, 0,   255},
+		{136, 136, 136},
+		{255, 255, 255}
+	};
+
+	if (index >= 1 && index <= 8)
 	{
-	case 0: r = 255; g = 160; b = 0;   break;
-	case 1: r = 255; g = 0;   b = 0;   break;
-	case 2: r = 0;   g = 255; b = 0;   break;
-	case 3: r = 255; g = 255; b = 0;   break;
-	case 4: r = 0;   g = 0;   b = 255; break;
-	case 5: r = 0;   g = 255; b = 255; break;
-	case 6: r = 255; g = 0;   b = 255; break;
-	case 7: r = 136; g = 136; b = 136; break;
-	case 8: r = 255; g = 255; b = 255; break;
-	case 9: r = 255; g = 160; b = 0;   break;
-	default: r = 255; g = 160; b = 0;  break;
+		r = colors[index - 1][0];
+		g = colors[index - 1][1];
+		b = colors[index - 1][2];
 	}
 }
 
@@ -583,9 +586,9 @@ void UnicodeTextImage::paint(vgui::Panel* panel)
 			if (nextChar >= L'0' && nextChar <= L'9')
 			{
 				int colorIndex = nextChar - L'0';
-				GetColorByIndex(colorIndex, r, g, b); // <- Твоя функція кольорів
+				GetColorByIndex(colorIndex, r, g, b);
 				g_pVGuiSurface->DrawSetTextColor(r, g, b, 255);
-				i++; // Пропускаємо тег
+				i++;
 				continue;
 			}
 		}
