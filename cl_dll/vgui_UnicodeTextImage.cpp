@@ -481,7 +481,7 @@ void UnicodeTextImage::setPos(int x, int y)
 	BaseClass::setPos(x, y);
 }
 
-void GetColorByIndex(int index, int& r, int& g, int& b)
+bool GetColorByIndex(int index, int& r, int& g, int& b)
 {
 	static const int colors[][3] = {
 		{255, 0,   0},
@@ -499,8 +499,26 @@ void GetColorByIndex(int index, int& r, int& g, int& b)
 		r = colors[index - 1][0];
 		g = colors[index - 1][1];
 		b = colors[index - 1][2];
+		return true;
 	}
+	else if(index == 0 || index == 9)
+	{
+		if (g_IsSpectator) {
+			r = 100;
+			g = 100;
+			b = 100;
+		}
+		else
+		{
+			r = 255;
+			g = 160;
+			b = 0;
+		}
+		return false;
+	}
+	return false;
 }
+
 
 void UnicodeTextImage::paint(vgui::Panel* panel)
 {
