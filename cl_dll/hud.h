@@ -349,6 +349,10 @@ private:
 	struct cvar_s* m_HUD_saytext_sound;
 	struct cvar_s* m_HUD_rainbow_chat;
 	struct cvar_s* m_HUD_saytext_sound_path;
+
+public:
+
+	cvar_t* m_HUD_logchat;
 };
 
 //
