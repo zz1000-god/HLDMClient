@@ -88,6 +88,9 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - `cl_scores_pos "x y"`
 - Scoreboard now shows each player's model name
 - Added `cl_old_scoreboard 1` like in OpenAG
+- Added unicode support in scoreboard
+- Added color tags support in scoreboard
+- Added chat loging `hud_saytext_log_chat` 
 
 ### 🌟 Extended Sprites
 - Support for larger sprites like HL25
