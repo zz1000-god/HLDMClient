@@ -203,11 +203,9 @@ int CHudSayText :: MsgFunc_SayText( const char *pszName, int iSize, void *pbuf )
 
 static void LogChatMessage(const char* message)
 {
-	// Перевірка cvar
 	if (gHUD.m_SayText.m_HUD_logchat->value <= 0.0f)
 		return;
 
-	// Час
 	time_t rawtime;
 	struct tm* timeinfo;
 	time(&rawtime);
@@ -216,15 +214,12 @@ static void LogChatMessage(const char* message)
 	char timebuf[16];
 	strftime(timebuf, sizeof(timebuf), "[%H:%M:%S]", timeinfo);
 
-	// Назва мапи
 	char mapName[64];
 	get_map_name(mapName, sizeof(mapName));
 
-	// Папка з датою
 	char dateDir[64];
 	strftime(dateDir, sizeof(dateDir), "%Y-%m", timeinfo);
 
-	// Унікальна назва файлу для сесії (однаковий файл на час карти)
 	static char logPath[512] = { 0 };
 	static bool pathInited = false;
 
@@ -240,24 +235,37 @@ static void LogChatMessage(const char* message)
 		pathInited = true;
 	}
 
-	char cleanMsg[1024];
-	strncpy(cleanMsg, message, sizeof(cleanMsg) - 1);
-	cleanMsg[sizeof(cleanMsg) - 1] = '\0';
-	{
-		char* src = cleanMsg;
-		char* dst = cleanMsg;
-		while (*src)
-		{
-			unsigned char c = (unsigned char)*src;
-			if (c >= 0x20 || c == '\n' || c == '\t')
-				*dst++ = *src;
-			src++;
-		}
-		*dst = '\0';
-	}
-	color_tags::strip_color_tags(cleanMsg, message, sizeof(cleanMsg));
+	const char* src = message;
+	if ((unsigned char)src[0] == 0x02)
+		src++;
 
-	// Запис у файл
+	char cleanMsg[1024];
+	char* dst = cleanMsg;
+
+	while (*src && (dst - cleanMsg) < (int)sizeof(cleanMsg) - 1)
+	{
+		if (*src == '^' && src[1] >= '0' && src[1] <= '9')
+		{
+			src += 2;
+			continue;
+		}
+
+		if ((unsigned char)*src < 0x20 && *src != '\n' && *src != '\t')
+		{
+			src++;
+			continue;
+		}
+
+		if ((unsigned char)src[0] == 0xC2 && (unsigned char)src[1] == 0x82)
+		{
+			src += 2;
+			continue;
+		}
+
+		*dst++ = *src++;
+	}
+	*dst = '\0';
+
 	FILE* f = fopen(logPath, "a");
 	if (f)
 	{
