@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <malloc.h> // _alloca
+#include <iostream>
 
 #include "vgui_TeamFortressViewport.h"
 
@@ -61,6 +62,7 @@ int CHudSayText :: Init( void )
 	m_HUD_saytext_time =	gEngfuncs.pfnRegisterVariable( "hud_saytext_time", "5", 0 );
 	m_HUD_saytext_sound_path = gEngfuncs.pfnRegisterVariable("hud_saytext_sound_path", "misc/talk.wav", FCVAR_ARCHIVE);
 	m_HUD_rainbow_chat = gEngfuncs.pfnRegisterVariable("hud_rainbow_chat", "1", FCVAR_ARCHIVE);
+	m_HUD_logchat = CVAR_CREATE("hud_saytext_log_chat", "0", FCVAR_ARCHIVE);
 
 
 	m_iFlags |= HUD_INTERMISSION; // is always drawn during an intermission
@@ -199,6 +201,71 @@ int CHudSayText :: MsgFunc_SayText( const char *pszName, int iSize, void *pbuf )
 	return 1;
 }
 
+static void LogChatMessage(const char* message)
+{
+	// Перевірка cvar
+	if (gHUD.m_SayText.m_HUD_logchat->value <= 0.0f)
+		return;
+
+	// Час
+	time_t rawtime;
+	struct tm* timeinfo;
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	char timebuf[16];
+	strftime(timebuf, sizeof(timebuf), "[%H:%M:%S]", timeinfo);
+
+	// Назва мапи
+	char mapName[64];
+	get_map_name(mapName, sizeof(mapName));
+
+	// Папка з датою
+	char dateDir[64];
+	strftime(dateDir, sizeof(dateDir), "%Y-%m", timeinfo);
+
+	// Унікальна назва файлу для сесії (однаковий файл на час карти)
+	static char logPath[512] = { 0 };
+	static bool pathInited = false;
+
+	if (!pathInited)
+	{
+		char resultsPath[256];
+		snprintf(resultsPath, sizeof(resultsPath), "%s/results/%s", gEngfuncs.pfnGetGameDirectory(), dateDir);
+
+		char dateFile[64];
+		strftime(dateFile, sizeof(dateFile), "%Y%m%d-%H%M%S", timeinfo);
+
+		snprintf(logPath, sizeof(logPath), "%s/%s-%s.log", resultsPath, mapName, dateFile);
+		pathInited = true;
+	}
+
+	char cleanMsg[1024];
+	strncpy(cleanMsg, message, sizeof(cleanMsg) - 1);
+	cleanMsg[sizeof(cleanMsg) - 1] = '\0';
+	{
+		char* src = cleanMsg;
+		char* dst = cleanMsg;
+		while (*src)
+		{
+			unsigned char c = (unsigned char)*src;
+			if (c >= 0x20 || c == '\n' || c == '\t')
+				*dst++ = *src;
+			src++;
+		}
+		*dst = '\0';
+	}
+	color_tags::strip_color_tags(cleanMsg, message, sizeof(cleanMsg));
+
+	// Запис у файл
+	FILE* f = fopen(logPath, "a");
+	if (f)
+	{
+		fprintf(f, "%s %s\n", timebuf, cleanMsg);
+		fclose(f);
+	}
+}
+
 void CHudSayText :: SayTextPrint( const char *pszBuf, int iBufSize, int clientIndex )
 {
 	if (gViewPort && gViewPort->AllowedToPrintText() == FALSE)
@@ -245,7 +312,21 @@ void CHudSayText :: SayTextPrint( const char *pszBuf, int iBufSize, int clientIn
 
 	strncpy( g_szLineBuffer[i], pszBuf, max(iBufSize , MAX_CHARS_PER_LINE) );
 
-	ConsolePrint(g_szLineBuffer[i]);
+	//ConsolePrint(g_szLineBuffer[i]);
+
+	time_t rawtime;
+	struct tm* timeinfo;
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	char timebuf[16];
+	strftime(timebuf, sizeof(timebuf), "[%H:%M:%S]", timeinfo);
+
+	char buf[1024];
+	snprintf(buf, sizeof(buf), "%s %s", timebuf, g_szLineBuffer[i]);
+	ConsolePrint(buf);
+
+	LogChatMessage(g_szLineBuffer[i]);
 
 	// make sure the text fits in one line
 	EnsureTextFitsInOneLineAndWrapIfHaveTo( i );
