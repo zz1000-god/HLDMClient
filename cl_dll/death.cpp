@@ -155,30 +155,39 @@ int CHudDeathNotice::Draw(float flTime)
 
 			int id = (rgDeathNoticeList[i].iId == -1) ? m_HUD_d_skull : rgDeathNoticeList[i].iId;
 
-			// ВИПРАВЛЕННЯ: Використовуємо функцію без кольорових тегів
 			x = ScreenWidth - GetStringLenWithoutColorTags(rgDeathNoticeList[i].szVictim) - (gHUD.GetSpriteRect(id).right - gHUD.GetSpriteRect(id).left);
 
 			if (!rgDeathNoticeList[i].iSuicide)
 			{
-				// ВИПРАВЛЕННЯ: Тут також використовуємо функцію без кольорових тегів
 				x -= (5 + GetStringLenWithoutColorTags(rgDeathNoticeList[i].szKiller));
 
 				gHUD.AppendPlayerIfOnlyColorTags(rgDeathNoticeList[i].szKiller, sizeof(rgDeathNoticeList[i].szKiller));
 
-				// Draw killers name
-				if (rgDeathNoticeList[i].KillerColor) {
-					x = 5 + gHUD.DrawConsoleStringWithColorTags(
-						x,
-						y,
-						rgDeathNoticeList[i].szKiller,
-						true,
-						rgDeathNoticeList[i].KillerColor[0],
-						rgDeathNoticeList[i].KillerColor[1],
-						rgDeathNoticeList[i].KillerColor[2]
-					);
+				if (gHUD.m_Teamplay)
+				{
+					char cleanKiller[MAX_PLAYER_NAME_LENGTH * 2];
+					color_tags::strip_color_tags(cleanKiller, rgDeathNoticeList[i].szKiller, sizeof(cleanKiller));
+					if (rgDeathNoticeList[i].KillerColor)
+						gEngfuncs.pfnDrawSetTextColor(rgDeathNoticeList[i].KillerColor[0], rgDeathNoticeList[i].KillerColor[1], rgDeathNoticeList[i].KillerColor[2]);
+					x = 5 + DrawConsoleString(x, y, cleanKiller);
 				}
 				else
-					x = 5 + DrawConsoleString(x, y, rgDeathNoticeList[i].szKiller);
+				{
+					// Draw killers name
+					if (rgDeathNoticeList[i].KillerColor) {
+						x = 5 + gHUD.DrawConsoleStringWithColorTags(
+							x,
+							y,
+							rgDeathNoticeList[i].szKiller,
+							true,
+							rgDeathNoticeList[i].KillerColor[0],
+							rgDeathNoticeList[i].KillerColor[1],
+							rgDeathNoticeList[i].KillerColor[2]
+						);
+					}
+					else
+						x = 5 + DrawConsoleString(x, y, rgDeathNoticeList[i].szKiller);
+				}
 			}
 
 			r = 255;  g = 80;	b = 0;
@@ -193,23 +202,33 @@ int CHudDeathNotice::Draw(float flTime)
 
 			x += (gHUD.GetSpriteRect(id).right - gHUD.GetSpriteRect(id).left);
 
-			// Draw victims name (if it was a player that was killed)
-			if (rgDeathNoticeList[i].iNonPlayerKill == FALSE)
-			{
-				gHUD.AppendPlayerIfOnlyColorTags(rgDeathNoticeList[i].szVictim, sizeof(rgDeathNoticeList[i].szVictim));
-
+			if (gHUD.m_Teamplay) {
+				char cleanVictim[MAX_PLAYER_NAME_LENGTH * 2];
+				color_tags::strip_color_tags(cleanVictim, rgDeathNoticeList[i].szVictim, sizeof(cleanVictim));
 				if (rgDeathNoticeList[i].VictimColor)
-					x = gHUD.DrawConsoleStringWithColorTags(
-						x,
-						y,
-						rgDeathNoticeList[i].szVictim,
-						true,
-						rgDeathNoticeList[i].VictimColor[0],
-						rgDeathNoticeList[i].VictimColor[1],
-						rgDeathNoticeList[i].VictimColor[2]
-					);
-				else
-					x = DrawConsoleString(x, y, rgDeathNoticeList[i].szVictim);
+					gEngfuncs.pfnDrawSetTextColor(rgDeathNoticeList[i].VictimColor[0], rgDeathNoticeList[i].VictimColor[1], rgDeathNoticeList[i].VictimColor[2]);
+				x = DrawConsoleString(x, y, cleanVictim);
+			}
+			else
+			{
+				// Draw victims name (if it was a player that was killed)
+				if (rgDeathNoticeList[i].iNonPlayerKill == FALSE)
+				{
+					gHUD.AppendPlayerIfOnlyColorTags(rgDeathNoticeList[i].szVictim, sizeof(rgDeathNoticeList[i].szVictim));
+
+					if (rgDeathNoticeList[i].VictimColor)
+						x = gHUD.DrawConsoleStringWithColorTags(
+							x,
+							y,
+							rgDeathNoticeList[i].szVictim,
+							true,
+							rgDeathNoticeList[i].VictimColor[0],
+							rgDeathNoticeList[i].VictimColor[1],
+							rgDeathNoticeList[i].VictimColor[2]
+						);
+					else
+						x = DrawConsoleString(x, y, rgDeathNoticeList[i].szVictim);
+				}
 			}
 		}
 	}
