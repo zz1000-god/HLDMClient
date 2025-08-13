@@ -147,21 +147,31 @@ int CHudStatusBar::Draw(float fTime)
 			x = max(0, max(2, (ScreenWidth - TextWidth)) / 2);
 			y = (ScreenHeight / 2) + (TextHeight * CVAR_GET_FLOAT("hud_centerid"));
 		}
-
-		if (text)
-			gHUD.DrawConsoleStringWithColorTags(
-				x,
-				y,
-				text,
-				true,
-				m_pflNameColors[i][0],
+		if (gHUD.m_Teamplay) {
+			char cleantext[MAX_STATUSTEXT_LENGTH + 1];
+			color_tags::strip_color_tags(cleantext, text, sizeof(cleantext));
+			gEngfuncs.pfnDrawSetTextColor(m_pflNameColors[i][0],
 				m_pflNameColors[i][1],
-				m_pflNameColors[i][2]
-			);
-		else
-			DrawConsoleString(x, y, text);
-	}
+				m_pflNameColors[i][2]);
 
+			DrawConsoleString(x, y, cleantext);
+		}
+		else
+		{
+			if (text)
+				gHUD.DrawConsoleStringWithColorTags(
+					x,
+					y,
+					text,
+					true,
+					m_pflNameColors[i][0],
+					m_pflNameColors[i][1],
+					m_pflNameColors[i][2]
+				);
+			else
+				DrawConsoleString(x, y, text);
+		}
+	}
 	return 1;
 }
 
