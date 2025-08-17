@@ -402,6 +402,69 @@ void joinlast() {
 	gEngfuncs.pfnClientCmd(cmd);
 }
 
+void toggle_command()
+{
+	int argc = gEngfuncs.Cmd_Argc();
+	if (argc <= 1 || argc == 3)
+	{
+		gEngfuncs.Con_Printf("usage: *toggle <cvar> or *toggle <cvar> <val1> <val2> [val3] ... [valN]\n");
+		return;
+	}
+
+	// Get cvar name
+	const char* cvar_name = gEngfuncs.Cmd_Argv(1);
+
+	// Check if cvar exists
+	cvar_t* cvar = gEngfuncs.pfnGetCvarPointer(cvar_name);
+	if (!cvar)
+	{
+		gEngfuncs.Con_Printf("_toggle failed: cvar '%s' not found.\n", cvar_name);
+		return;
+	}
+
+	char cmd[256];
+
+	if (argc == 2)
+	{
+		// Toggle between 0 and 1
+		int current_value = (int)cvar->value;
+		sprintf(cmd, "%s %d", cvar_name, ~current_value);
+		gEngfuncs.pfnClientCmd(cmd);
+		return;
+	}
+	else
+	{
+		// Search for current value among arguments
+		const char* current_string = cvar->string;
+
+		for (int i = 2; i < argc; i++)
+		{
+			if (!strcmp(current_string, gEngfuncs.Cmd_Argv(i)))
+			{
+				if (i + 1 < argc)
+				{
+					// Switch to next value
+					sprintf(cmd, "%s \"%s\"", cvar_name, gEngfuncs.Cmd_Argv(i + 1));
+					gEngfuncs.pfnClientCmd(cmd);
+					return;
+				}
+				else
+				{
+					// If we reached the end of the list, start from beginning
+					sprintf(cmd, "%s \"%s\"", cvar_name, gEngfuncs.Cmd_Argv(2));
+					gEngfuncs.pfnClientCmd(cmd);
+					return;
+				}
+			}
+		}
+
+		// If current value not found in list, set to first value
+		sprintf(cmd, "%s \"%s\"", cvar_name, gEngfuncs.Cmd_Argv(2));
+		gEngfuncs.pfnClientCmd(cmd);
+		return;
+	}
+}
+
 bool CHud::AppendPlayerIfOnlyColorTags(char* text, size_t maxLen)
 {
 	char* original = text;
@@ -513,6 +576,7 @@ void CHud :: Init( void )
 	hud_watermark = CVAR_CREATE("hud_watermark", "1", FCVAR_ARCHIVE);
 
 	gEngfuncs.pfnAddCommand("joinlast", joinlast);
+	gEngfuncs.pfnAddCommand("_toogle", toggle_command);
 
 	m_pSpriteList = NULL;
 
