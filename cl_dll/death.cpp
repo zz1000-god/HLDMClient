@@ -132,9 +132,6 @@ int CHudDeathNotice::Draw(float flTime)
 
 	int gap = 20;
 
-	rect_s sprite = gHUD.GetSpriteRect(m_HUD_d_skull);
-	gap = sprite.bottom - sprite.top;
-
 	for (int i = 0; i < MAX_DEATHNOTICES; i++)
 	{
 		if (rgDeathNoticeList[i].iId == 0)
