@@ -291,6 +291,7 @@ private:
 	cvar_t* hud_deathnotice_time;
 	cvar_t* m_pCvarKillSnd;
 	cvar_t* m_pCvarKillSndPath;
+	cvar_t* m_pCvarTeamColors;
 	// sprite index of skull icon
 };
 
