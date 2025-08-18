@@ -250,7 +250,7 @@ static void LogChatMessage(const char* message)
 			continue;
 		}
 
-		if ((unsigned char)*src < 0x20 && *src != '\n' && *src != '\t')
+		if ((unsigned char)*src < 0x20)
 		{
 			src++;
 			continue;
