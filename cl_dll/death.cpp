@@ -77,6 +77,7 @@ int CHudDeathNotice::Init(void)
 
 	m_pCvarKillSnd = CVAR_CREATE("cl_killsound", "0", FCVAR_ARCHIVE);
 	m_pCvarKillSndPath = CVAR_CREATE("cl_killsound_path", "buttons/bell1.wav", FCVAR_ARCHIVE);
+	m_pCvarTeamColors = CVAR_CREATE("cl_killteamcolors", "1", FCVAR_ARCHIVE);
 
 	return 1;
 }
@@ -104,17 +105,14 @@ int GetStringLenWithoutColorTags(const char* str)
 	int writePos = 0;
 	int readPos = 0;
 
-	// Копіюємо рядок, пропускаючи кольорові теги
 	while (str[readPos] && writePos < sizeof(tempStr) - 1)
 	{
 		if (str[readPos] == '^' && str[readPos + 1] >= '0' && str[readPos + 1] <= '9')
 		{
-			// Пропускаємо кольоровий тег (^1, ^2, etc.)
 			readPos += 2;
 		}
 		else if (str[readPos] == '^' && str[readPos + 1] == '^')
 		{
-			// Подвійний ^ означає літеральний символ ^
 			tempStr[writePos++] = '^';
 			readPos += 2;
 		}
@@ -131,6 +129,11 @@ int GetStringLenWithoutColorTags(const char* str)
 int CHudDeathNotice::Draw(float flTime)
 {
 	int x, y, r, g, b;
+
+	int gap = 20;
+
+	rect_s sprite = gHUD.GetSpriteRect(m_HUD_d_skull);
+	gap = sprite.bottom - sprite.top;
 
 	for (int i = 0; i < MAX_DEATHNOTICES; i++)
 	{
@@ -151,11 +154,11 @@ int CHudDeathNotice::Draw(float flTime)
 		if (gViewPort && gViewPort->AllowedToPrintText())
 		{
 			// Draw the death notice
-			y = DEATHNOTICE_TOP + 2 + (20 * i);  //!!!
+			y = DEATHNOTICE_TOP + 2 + (gap * i);  //!!!
 
 			int id = (rgDeathNoticeList[i].iId == -1) ? m_HUD_d_skull : rgDeathNoticeList[i].iId;
 
-			x = ScreenWidth - GetStringLenWithoutColorTags(rgDeathNoticeList[i].szVictim) - (gHUD.GetSpriteRect(id).right - gHUD.GetSpriteRect(id).left);
+			x = ScreenWidth - GetStringLenWithoutColorTags(rgDeathNoticeList[i].szVictim) - (gHUD.GetSpriteRect(id).right - gHUD.GetSpriteRect(id).left) - 4;
 
 			if (!rgDeathNoticeList[i].iSuicide)
 			{
@@ -163,12 +166,16 @@ int CHudDeathNotice::Draw(float flTime)
 
 				gHUD.AppendPlayerIfOnlyColorTags(rgDeathNoticeList[i].szKiller, sizeof(rgDeathNoticeList[i].szKiller));
 
-				if (gHUD.m_Teamplay)
+				if (gHUD.m_Teamplay && m_pCvarTeamColors->value != 0.0f)
 				{
 					char cleanKiller[MAX_PLAYER_NAME_LENGTH * 2];
 					color_tags::strip_color_tags(cleanKiller, rgDeathNoticeList[i].szKiller, sizeof(cleanKiller));
 					if (rgDeathNoticeList[i].KillerColor)
-						gEngfuncs.pfnDrawSetTextColor(rgDeathNoticeList[i].KillerColor[0], rgDeathNoticeList[i].KillerColor[1], rgDeathNoticeList[i].KillerColor[2]);
+						gEngfuncs.pfnDrawSetTextColor(
+							rgDeathNoticeList[i].KillerColor[0],
+							rgDeathNoticeList[i].KillerColor[1],
+							rgDeathNoticeList[i].KillerColor[2]
+						);
 					x = 5 + DrawConsoleString(x, y, cleanKiller);
 				}
 				else
@@ -202,11 +209,15 @@ int CHudDeathNotice::Draw(float flTime)
 
 			x += (gHUD.GetSpriteRect(id).right - gHUD.GetSpriteRect(id).left);
 
-			if (gHUD.m_Teamplay) {
+			if (gHUD.m_Teamplay && m_pCvarTeamColors->value != 0.0f) {
 				char cleanVictim[MAX_PLAYER_NAME_LENGTH * 2];
 				color_tags::strip_color_tags(cleanVictim, rgDeathNoticeList[i].szVictim, sizeof(cleanVictim));
 				if (rgDeathNoticeList[i].VictimColor)
-					gEngfuncs.pfnDrawSetTextColor(rgDeathNoticeList[i].VictimColor[0], rgDeathNoticeList[i].VictimColor[1], rgDeathNoticeList[i].VictimColor[2]);
+					gEngfuncs.pfnDrawSetTextColor(
+						rgDeathNoticeList[i].VictimColor[0], 
+						rgDeathNoticeList[i].VictimColor[1], 
+						rgDeathNoticeList[i].VictimColor[2]
+					);
 				x = DrawConsoleString(x, y, cleanVictim);
 			}
 			else
