@@ -77,7 +77,7 @@ int CHudDeathNotice::Init(void)
 
 	m_pCvarKillSnd = CVAR_CREATE("cl_killsound", "0", FCVAR_ARCHIVE);
 	m_pCvarKillSndPath = CVAR_CREATE("cl_killsound_path", "buttons/bell1.wav", FCVAR_ARCHIVE);
-	m_pCvarTeamColors = CVAR_CREATE("cl_killteamcolors", "1", FCVAR_ARCHIVE);
+	m_pCvarTeamColors = CVAR_CREATE("cl_teamcolors", "1", FCVAR_ARCHIVE);
 
 	return 1;
 }
