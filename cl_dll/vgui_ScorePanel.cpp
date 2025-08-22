@@ -722,6 +722,7 @@ void ScorePanel::FillGrid()
 				// team color text for player names
 				if (g_IsSpectator[m_iSortedRows[row]] || started_drawing_spectators) {
 					pLabel->setFgColor(100, 100, 100, 0);
+					started_drawing_spectators = true;
 				}
 				else {
 					pLabel->setFgColor(iTeamColors[g_PlayerExtraInfo[m_iSortedRows[row]].teamnumber % iNumberOfTeamColors][0],
