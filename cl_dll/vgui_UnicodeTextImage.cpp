@@ -483,7 +483,7 @@ void UnicodeTextImage::setPos(int x, int y)
 
 bool GetColorByIndex(int index, int& r, int& g, int& b)
 {
-	extern bool started_drawing_spectators;
+	extern bool is_spectator;
 
 	static const int colors[][3] = {
 		{255, 0,   0},
@@ -505,7 +505,7 @@ bool GetColorByIndex(int index, int& r, int& g, int& b)
 	}
 	else if (index == 0 || index == 9)
 	{
-		if (started_drawing_spectators == true) {
+		if (is_spectator == true) {
 			r = 100;
 			g = 100;
 			b = 100;
