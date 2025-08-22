@@ -38,6 +38,8 @@ extern extra_player_info_t  g_PlayerExtraInfo[MAX_PLAYERS+1];   // additional pl
 team_info_t			 g_TeamInfo[MAX_TEAMS+1];
 int					 g_IsSpectator[MAX_PLAYERS+1];
 
+bool started_drawing_spectators;
+
 int HUD_IsGame( const char *game );
 int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 );
 
@@ -97,26 +99,28 @@ void ScorePanel::HitTestPanel::internalMousePressed(MouseCode code)
 ScorePanel::ScorePanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 {
 	CSchemeManager *pSchemes = gViewPort->GetSchemeManager();
+	SchemeHandle_t hScheme = pSchemes->getSchemeHandle("Scoreboard Text");
 	SchemeHandle_t hTitleScheme = pSchemes->getSchemeHandle("Scoreboard Title Text");
 	SchemeHandle_t hSmallScheme = pSchemes->getSchemeHandle("Scoreboard Small Text");
+	Font* sfont = pSchemes->getFont(hScheme);
 	Font *tfont = pSchemes->getFont(hTitleScheme);
 	Font *smallfont = pSchemes->getFont(hSmallScheme);
 
 	if (ScreenHeight > 768)
 	{
 		// Scale fonts for high-resolutions screens
-		m_UFont = UnicodeTextImage::createFont("Arial", std::round(YRES(10)), 300);
-		m_UTitleFont = UnicodeTextImage::createFont("Arial", std::round(YRES(16)), 700);
-		m_USmallFont = UnicodeTextImage::createFont("Arial", std::round(YRES(8)), 400);
+		m_UFont = UnicodeTextImage::createFont(pSchemes->getFontName(hScheme), std::round(YRES(10)), 300);
+		m_UTitleFont = UnicodeTextImage::createFont(pSchemes->getFontName(hTitleScheme), std::round(YRES(16)), 700);
+		m_USmallFont = UnicodeTextImage::createFont(pSchemes->getFontName(hSmallScheme), std::round(YRES(8)), 400);
 	}
 	else
 	{
 		// Use font sizes from the scheme for low resolutions (640x480, 800x600, 1024x768)
 		SchemeHandle_t hScheme = pSchemes->getSchemeHandle("Scoreboard Text");
 		Font* sfont = pSchemes->getFont(hScheme);
-		m_UFont = UnicodeTextImage::createFont("Arial", sfont->getTall(), 300);
-		m_UTitleFont = UnicodeTextImage::createFont("Arial", tfont->getTall(), 700);
-		m_USmallFont = UnicodeTextImage::createFont("Arial", smallfont->getTall(), 400);
+		m_UFont = UnicodeTextImage::createFont(pSchemes->getFontName(hScheme), sfont->getTall(), 300);
+		m_UTitleFont = UnicodeTextImage::createFont(pSchemes->getFontName(hTitleScheme), tfont->getTall(), 700);
+		m_USmallFont = UnicodeTextImage::createFont(pSchemes->getFontName(hSmallScheme), smallfont->getTall(), 400);
 	}
 
 	setBgColor(0, 0, 0, 96);
@@ -613,7 +617,7 @@ void ScorePanel::FillGrid()
 	}
 
 	bool bNextRowIsGap = false;
-	bool started_drawing_spectators = false;
+	started_drawing_spectators = false;
 
 	int row;
 	for(row=0; row < NUM_ROWS; row++)
