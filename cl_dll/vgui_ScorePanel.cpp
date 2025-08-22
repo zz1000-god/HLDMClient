@@ -38,7 +38,7 @@ extern extra_player_info_t  g_PlayerExtraInfo[MAX_PLAYERS+1];   // additional pl
 team_info_t			 g_TeamInfo[MAX_TEAMS+1];
 int					 g_IsSpectator[MAX_PLAYERS+1];
 
-bool started_drawing_spectators;
+bool is_spectator = false;
 
 int HUD_IsGame( const char *game );
 int EV_TFC_IsAllyTeam( int iTeam1, int iTeam2 );
@@ -617,7 +617,7 @@ void ScorePanel::FillGrid()
 	}
 
 	bool bNextRowIsGap = false;
-	started_drawing_spectators = false;
+	bool started_drawing_spectators = false;
 
 	int row;
 	for(row=0; row < NUM_ROWS; row++)
@@ -722,7 +722,6 @@ void ScorePanel::FillGrid()
 				// team color text for player names
 				if (g_IsSpectator[m_iSortedRows[row]] || started_drawing_spectators) {
 					pLabel->setFgColor(100, 100, 100, 0);
-					started_drawing_spectators = true;
 				}
 				else {
 					pLabel->setFgColor(iTeamColors[g_PlayerExtraInfo[m_iSortedRows[row]].teamnumber % iNumberOfTeamColors][0],
@@ -860,6 +859,7 @@ void ScorePanel::FillGrid()
 					// Check if player is spectator and add (S) suffix
 					if (g_IsSpectator[m_iSortedRows[row]] || started_drawing_spectators) {
 						sprintf(sz, "%s (S)  ", name);
+						is_spectator = true;
 					}
 					else {
 						sprintf(sz, "%s  ", name);
