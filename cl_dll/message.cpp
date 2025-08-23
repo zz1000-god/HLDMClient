@@ -342,9 +342,15 @@ void CHudMessage::MessageDrawScan(client_textmessage_t* pMessage, float time)
 			[&](const char* substr, bool customColor, int r, int g, int b) {
 				// If no custom color, use original message colors
 				if (!customColor) {
-					r = m_parms.pMessage->r1;
-					g = m_parms.pMessage->g1;
-					b = m_parms.pMessage->b1;
+					const char* colorString = gHUD.m_pCvarColor->string;
+					if (strcmp(colorString, "255 255 255") != 0) {
+						UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
+					}
+					else {
+						r = m_parms.pMessage->r1;
+						g = m_parms.pMessage->g1;
+						b = m_parms.pMessage->b1;
+					}
 				}
 
 				for (int k = 0; substr[k] != '\0'; ++k) {
