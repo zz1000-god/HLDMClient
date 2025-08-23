@@ -32,6 +32,7 @@ DECLARE_MESSAGE( m_Message, GameTitle )
 client_textmessage_t	g_pCustomMessage;
 char *g_pCustomName = "Custom";
 char g_pCustomText[1024];
+int finalR, finalG, finalB;
 
 int CHudMessage::Init(void)
 {
@@ -152,10 +153,6 @@ void CHudMessage::MessageScanNextChar( void )
 	destGreen = 0;
 	destBlue = 0;
 	blend = 0;	// Pure source
-
-	if (gHUD.m_Rainbow.IsEnabled()) {
-		gHUD.m_Rainbow.GetRainbowColor(m_parms.x, m_parms.y, srcRed, srcGreen, srcBlue);
-	}
 
 	switch( m_parms.pMessage->effect )
 	{
@@ -366,8 +363,6 @@ void CHudMessage::MessageDrawScan(client_textmessage_t* pMessage, float time)
 					// Calculate animated colors
 					MessageScanNextChar();
 
-					int finalR, finalG, finalB;
-
 					// Apply animation effects based on message effect type
 					switch (m_parms.pMessage->effect) {
 						case 0: // Fade in/out
@@ -408,6 +403,10 @@ void CHudMessage::MessageDrawScan(client_textmessage_t* pMessage, float time)
 							finalG = g;
 							finalB = b;
 							break;
+					}
+
+					if (gHUD.m_Rainbow.IsEnabled()) {
+						gHUD.m_Rainbow.GetRainbowColor(m_parms.x, m_parms.y, finalR, finalG, finalB);
 					}
 
 					// Draw character if within screen bounds and visible
