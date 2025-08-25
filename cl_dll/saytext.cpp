@@ -131,7 +131,6 @@ int CHudSayText::Draw(float flTime)
 
 	for (int i = 0; i < MAX_LINES; i++)
 	{
-		gEngfuncs.pfnDrawSetTextColor(1.0f, 160.0f / 255.0f, 0.0f);
 		if (*g_szLineBuffer[i])
 		{
 			if (*g_szLineBuffer[i] == 2 && g_pflNameColors[i])
@@ -153,35 +152,12 @@ int CHudSayText::Draw(float flTime)
 					g_pflNameColors[i][2]
 				);
 
-				char* remaining_text = g_szLineBuffer[i] + g_iNameLengths[i];
-
-				if (remaining_text && *remaining_text)
-				{
-					if (color_tags::contains_color_tags(remaining_text))
-					{
-						gHUD.DrawConsoleStringWithColorTags(x, y, remaining_text);
-					}
-					else
-					{
-						gEngfuncs.pfnDrawSetTextColor(1.0f, 160.0f / 255.0f, 0.0f);
-						DrawConsoleString(x, y, remaining_text);
-					}
-				}
+				gHUD.DrawConsoleStringWithColorTags(x, y, g_szLineBuffer[i] + g_iNameLengths[i]);
 			}
-			else
-			{
-				if (color_tags::contains_color_tags(g_szLineBuffer[i]))
-				{
-					gHUD.DrawConsoleStringWithColorTags(LINE_START, y, g_szLineBuffer[i], i);
-				}
-				else
-				{
-					gEngfuncs.pfnDrawSetTextColor(1.0f, 160.0f / 255.0f, 0.0f);
-					DrawConsoleString(LINE_START, y, g_szLineBuffer[i]);
-				}
+			else {
+				gHUD.DrawConsoleStringWithColorTags(LINE_START, y, g_szLineBuffer[i]);
 			}
 		}
-
 		y += line_height;
 	}
 
