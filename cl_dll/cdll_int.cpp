@@ -63,6 +63,17 @@ void InitInput (void);
 void EV_HookEvents( void );
 void IN_Commands( void );
 
+void CheckGameDir()
+{
+	const char* gameDir = gEngfuncs.pfnGetGameDirectory();
+
+	if (strcmp(gameDir, "valve") != 0)
+	{
+		MessageBoxA(NULL, "Supported only for HLDM", "Error", MB_OK | MB_ICONERROR);
+		exit(0);
+	}
+}
+
 /*
 ================================
 HUD_GetHullBounds
@@ -156,6 +167,7 @@ int CL_DLLEXPORT Initialize( cl_enginefunc_t *pEnginefuncs, int iVersion )
 
 	EV_HookEvents();
 	CL_LoadParticleMan();
+	CheckGameDir();
 
 	// get tracker interface, if any
 	return 1;
