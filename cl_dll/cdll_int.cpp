@@ -74,6 +74,11 @@ void CheckGameDir()
 	}
 }
 
+void HLDMClient() {
+	ConsolePrint("HLDM Client loaded");
+	ConsolePrint("Made by Kv4sMan");
+}
+
 /*
 ================================
 HUD_GetHullBounds
@@ -168,6 +173,7 @@ int CL_DLLEXPORT Initialize( cl_enginefunc_t *pEnginefuncs, int iVersion )
 	EV_HookEvents();
 	CL_LoadParticleMan();
 	CheckGameDir();
+	HLDMClient();
 
 	// get tracker interface, if any
 	return 1;
