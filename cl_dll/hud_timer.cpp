@@ -327,6 +327,9 @@ void CHudTimer::DrawNextMap(float time)
     int x = ScreenWidth / 2;
     int y = gHUD.m_scrinfo.iCharHeight * 3;
 
+    if (hud_timer_height->value > 0.0f)
+        y += hud_timer_height->value;
+
     // Color settings
     int r, g, b;
     UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
@@ -531,7 +534,6 @@ void CHudTimer::SyncTimerRemote(unsigned int ip, unsigned short port, float fTim
     {
         if (len < 9) return; 
 
-        // Перевірка ID запиту та номера пакета
         int requestID = *(int *)(buffer + 4);
         unsigned char headerInfo = buffer[8];
         int currentPacket = headerInfo >> 4; 

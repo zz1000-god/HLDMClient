@@ -951,14 +951,12 @@ int CHudAmmo::Draw(float flTime)
 	int customX2 = 0, customY2 = 0;
 	bool useCustomPos1 = false, useCustomPos2 = false;
 
-	// Читання позиції з cvar hud_ammo1_pos
 	if (hud_ammo1_pos && strcmp(hud_ammo1_pos->string, "0 0") != 0)
 	{
 		if (sscanf(hud_ammo1_pos->string, "%d %d", &customX1, &customY1) == 2)
 			useCustomPos1 = true;
 	}
 
-	// Читання позиції з cvar hud_ammo2_pos
 	if (hud_ammo2_pos && strcmp(hud_ammo2_pos->string, "0 0") != 0)
 	{
 		if (sscanf(hud_ammo2_pos->string, "%d %d", &customX2, &customY2) == 2)
@@ -973,7 +971,7 @@ int CHudAmmo::Draw(float flTime)
 		int iIconWidth = m_pWeapon->rcAmmo.right - m_pWeapon->rcAmmo.left;
 
 		int x = useCustomPos1 ? customX1 : ScreenWidth - (8 * AmmoWidth) - iIconWidth;
-		int y = useCustomPos1 ? customY1 : defaultY; // defaultY = початкове положення
+		int y = useCustomPos1 ? customY1 : defaultY;
 
 		if (pw->iClip >= 0)
 		{
@@ -997,13 +995,11 @@ int CHudAmmo::Draw(float flTime)
 			x = gHUD.DrawHudNumber(x, y, iFlags | DHN_3DIGITS, gWR.CountAmmo(pw->iAmmoType), r, g, b);
 		}
 
-		// Іконка
 		int iOffset = (m_pWeapon->rcAmmo.bottom - m_pWeapon->rcAmmo.top) / 8;
 		SPR_Set(m_pWeapon->hAmmo, r, g, b);
 		SPR_DrawAdditive(0, x, y - iOffset, &m_pWeapon->rcAmmo);
 	}
 
-	// Вторинні боєприпаси
 	if (pw->iAmmo2Type > 0)
 	{
 		if (gWR.CountAmmo(pw->iAmmo2Type) > 0)

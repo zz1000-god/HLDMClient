@@ -98,7 +98,7 @@ void ForEachBannedPlayer(char id[16])
 		id[12], id[13], id[14], id[15]
 		);
 #ifdef _WIN32
-	strupr(str);
+	_strupr(str);
 #endif
 	gEngfuncs.pfnConsolePrint(str);
 }

@@ -14,7 +14,7 @@ int CHudJumpspeed::Init()
 
 	hud_jumpspeed = CVAR_CREATE("hud_jumpspeed", "0", FCVAR_ARCHIVE);
 	hud_jumpspeed_below_cross = CVAR_CREATE("hud_jumpspeed_below_cross", "0", FCVAR_ARCHIVE);
-	hud_jumpspeed_height = CVAR_CREATE("hud_jumpspeed_pos", "0 0", FCVAR_ARCHIVE);
+	hud_jumpspeed_height = CVAR_CREATE("hud_jumpspeed_height", "0", FCVAR_ARCHIVE);
 
 	gHUD.AddHudElem(this);
 	return 0;
@@ -33,27 +33,23 @@ int CHudJumpspeed::Draw(float flTime)
 
 	int r, g, b;
 	UnpackRGB(r, g, b, gHUD.m_iDefaultHUDColor);
-	int x = ScreenWidth / 2, y = 0;
-	int customX = 0, customY = 0;
-	int useCustomPos = false;
-	if (hud_jumpspeed_height && strcmp(hud_jumpspeed_height->string, "0 0") != 0)
-	{
-		if (sscanf(hud_jumpspeed_height->string, "%d %d", &customX, &customY) == 2)
-			useCustomPos = true;
-	}
 
-	if (useCustomPos) // default position
-	{
-		x = customX;
-		y = customY;
-	}
-	else
-	{
-		if (hud_jumpspeed_below_cross->value != 0.0f)
+	cvar_t* hud_speedometer_below_cross = gEngfuncs.pfnGetCvarPointer("hud_speedometer_below_cross");
+
+	int y;
+	if (hud_jumpspeed_below_cross->value != 0.0f) {
+		if (hud_speedometer_below_cross->value != 0.0f) {
 			y = ScreenHeight / 2 + gHUD.m_iFontHeight / 2 + gHUD.m_iFontHeight;
+		}
 		else
-			y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+		{
+			y = ScreenHeight / 2 + gHUD.m_iFontHeight / 2;
+		}
 	}
+	else if (hud_jumpspeed_height->value != 0.0f)
+		y = hud_jumpspeed_height->value;
+	else
+		y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
 
 	// Can be negative if we went back in time (for example, loaded a save).
 	double timeDelta = std::fmax(flTime - lastTime, 0.0f);
@@ -72,7 +68,7 @@ int CHudJumpspeed::Draw(float flTime)
 	b = static_cast<int>(b - colorVel[2] * (FADE_DURATION_JUMPSPEED - passedTime));
 
 	lastTime = flTime;
-	gHUD.DrawHudNumberCentered(x, y, speed, r, g, b);
+	gHUD.DrawHudNumberCentered(ScreenWidth / 2, y, speed, r, g, b);
 
 	return 0;
 }

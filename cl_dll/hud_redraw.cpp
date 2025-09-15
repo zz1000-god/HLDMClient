@@ -234,7 +234,6 @@ void ScaleColors( int &r, int &g, int &b, int a )
 	b = (int)(b * x);
 }
 
-
 void CHud::UpdateDefaultHUDColor()
 {
 	int r, g, b;
@@ -465,6 +464,8 @@ int CHud::DrawConsoleStringWithColorTags(int x, int y, char* string, bool use_de
 			gEngfuncs.pfnDrawSetTextColor(r / 255.0f, g / 255.0f, b / 255.0f);
 		else if (use_default_color)
 			gEngfuncs.pfnDrawSetTextColor(default_r, default_g, default_b);
+		else if (!use_default_color)
+			gEngfuncs.pfnDrawConsoleString(x, y, " "); // Reset color to con_color
 
 		const char* original = string;
 		char buffer[256];

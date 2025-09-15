@@ -1,4 +1,4 @@
-/***
+﻿/***
 *
 *	Copyright (c) 1996-2002, Valve LLC. All rights reserved.
 *
@@ -25,9 +25,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <keydefs.h>
-#include <string_view>
 
 #include "vgui_TeamFortressViewport.h"
+#include <string_view>
 
 #define MAX_MENU_STRING	512
 char g_szMenuString[MAX_MENU_STRING];
@@ -44,7 +44,7 @@ int CHudMenu::Init(void)
 	HOOK_MESSAGE(ShowMenu);
 
 	// Register console variables
-	hud_menu_fkeys = CVAR_CREATE("hud_menu_fkeys", "1", FCVAR_ARCHIVE);
+	hud_menu_fkeys = CVAR_CREATE("hud_menu_fkeys", "0", FCVAR_ARCHIVE);
 	hud_menu_fkeys_cooldown = CVAR_CREATE("hud_menu_fkeys_cooldown", "1.5", FCVAR_ARCHIVE);
 
 	InitHUDData();

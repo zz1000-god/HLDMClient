@@ -12,7 +12,7 @@ int CHudSpeedometer::Init()
 
 	hud_speedometer = CVAR_CREATE("hud_speedometer", "0", FCVAR_ARCHIVE);
 	hud_speedometer_below_cross = CVAR_CREATE("hud_speedometer_below_cross", "0", FCVAR_ARCHIVE);
-	hud_speedometer_pos = CVAR_CREATE("hud_speedometer_pos", "0 0", FCVAR_ARCHIVE);
+	hud_speedometer_height = CVAR_CREATE("hud_speedometer_height", "0", FCVAR_ARCHIVE);
 
 	gHUD.AddHudElem(this);
 	return 0;
@@ -33,34 +33,27 @@ int CHudSpeedometer::Draw(float time)
 
 	int y;
 	int x = ScreenWidth / 2;
-	int customX = 0, customY = 0;
-	int useCustomPos = false;
-	if (hud_speedometer_pos && strcmp(hud_speedometer_pos->string, "0 0") != 0)
+	if (hud_speedometer_below_cross->value != 0.0f)
 	{
-		if (sscanf(hud_speedometer_pos->string, "%d %d", &customX, &customY) == 2)
-			useCustomPos = true;
-	}
+		y = ScreenHeight / 2 + gHUD.m_iFontHeight / 2;
 
-	if (useCustomPos) // default position
+	}
+	else if (hud_speedometer_height->value > 0.0f)
 	{
-		x = customX;
-		y = customY;
+		y = hud_speedometer_height->value;
 	}
 	else
 	{
-		if (hud_speedometer_below_cross->value != 0.0f)
-			y = ScreenHeight / 2 + gHUD.m_iFontHeight / 2;
-		else
+		cvar_t* hud_jumpspeed = gEngfuncs.pfnGetCvarPointer("hud_jumpspeed");
+		cvar_t* hud_jumpspeed_below_cross = gEngfuncs.pfnGetCvarPointer("hud_jumpspeed_below_cross");
+		cvar_t* hud_jumpspeed_height = gEngfuncs.pfnGetCvarPointer("hud_jumpspeed_height");
+		if (hud_jumpspeed_below_cross->value != 0.0f || hud_jumpspeed_height->value != 0.0f || hud_jumpspeed->value == 0.0f)
 		{
-			cvar_t* hud_jumpspeed = gEngfuncs.pfnGetCvarPointer("hud_jumpspeed");
-			if (hud_jumpspeed && hud_jumpspeed->value == 0.0f)
-			{
-				y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
-			}
-			else
-			{
-				y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2 - gHUD.m_iFontHeight;
-			}
+			y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2;
+		}
+		else if (hud_jumpspeed_below_cross->value == 0.0f || hud_jumpspeed_height->value == 0.0f)
+		{
+			y = ScreenHeight - gHUD.m_iFontHeight - gHUD.m_iFontHeight / 2 - gHUD.m_iFontHeight;
 		}
 	}
 

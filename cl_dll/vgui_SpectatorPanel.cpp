@@ -157,7 +157,7 @@ void SpectatorPanel::Initialize()
 	m_OptionButton->setUnArmedColor ( 143, 143, 54, 0 );
 	m_OptionButton->setArmedColor ( 194, 202, 54, 0 );
 
-	m_CamButton = new DropDownButton( CHudTextMessage::BufferedLocaliseTextString( "#CAM_OPTIONS" ),  ScreenWidth - XRES_HD( CAMOPTIONS_BUTTON_X + 15 ), YRES_HD(6), XRES_HD( CAMOPTIONS_BUTTON_X ), YRES_HD(20), false, false );
+	m_CamButton = new DropDownButton( CHudTextMessage::BufferedLocaliseTextString( "#CAM_OPTIONS" ),  ScreenWidth - XRES_HD( CAMOPTIONS_BUTTON_X + 15 ), YRES_HD(6), XRES_HD( CAMOPTIONS_BUTTON_X), YRES_HD(20), false, false );
 	m_CamButton->setParent( m_BottomBorder );
 	m_CamButton->setContentAlignment( vgui::Label::a_center );
 	m_CamButton->setBoundKey( (char)255 );	// special no bound to avoid leading spaces in name 
@@ -191,7 +191,7 @@ void SpectatorPanel::Initialize()
 	
 	// Initialize the bottom title.
 
-	float flLabelSize = ScreenWidth - XRES_HD( CAMOPTIONS_BUTTON_X + 15 ) - XRES_HD( 24 + 15 ) - XRES_HD( (15 + OPTIONS_BUTTON_X + 15) + 38 );
+	//float flLabelSize = ScreenWidth - XRES_HD( CAMOPTIONS_BUTTON_X + 15 ) - XRES_HD( 24 + 15 ) - XRES_HD( (15 + OPTIONS_BUTTON_X + 15) + 38 );
 
 	m_BottomMainButton = new DropDownButton("Spectator Bottom", 
 		XRES(MAIN_LABEL_X), YRES_HD(6), XRES(MAIN_LABEL_WIDTH), YRES_HD(20),

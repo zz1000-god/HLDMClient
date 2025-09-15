@@ -21,7 +21,6 @@
 #include "hud.h"
 #include "cl_util.h"
 #include "netadr.h"
-#include "console.h"
 #undef INTERFACE_H
 #include "../public/interface.h"
 //#include "vgui_schememanager.h"
@@ -75,10 +74,9 @@ void CheckGameDir()
 }
 
 void HLDMClient() {
-	ConsolePrint("HLDM Client loaded");
-	ConsolePrint("Made by Kv4sMan");
+	gEngfuncs.pfnClientCmd("echo HLDM Client loaded");
+	gEngfuncs.pfnClientCmd("echo Made by Kv4sMan");
 }
-
 /*
 ================================
 HUD_GetHullBounds

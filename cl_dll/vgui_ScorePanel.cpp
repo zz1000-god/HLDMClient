@@ -1,4 +1,4 @@
-//=========== (C) Copyright 1999 Valve, L.L.C. All rights reserved. ===========
+﻿//=========== (C) Copyright 1999 Valve, L.L.C. All rights reserved. ===========
 //
 // The copyright to the contents herein is the property of Valve, L.L.C.
 // The contents may be used and/or copied only with the written permission of
@@ -160,6 +160,16 @@ ScorePanel::ScorePanel(int x,int y,int wide,int tall) : Panel(x,y,wide,tall)
 	m_MapLabel.setBounds(xpos, mapLabelY, wide, 20);
 	m_MapLabel.setContentFitted(false);
 	m_MapLabel.setParent(this);
+
+	m_PlayerCount.setFont(smallfont);
+	m_PlayerCount.setText("");
+	m_PlayerCount.setBgColor(0, 0, 0, 255);
+	m_PlayerCount.setFgColor(Scheme::sc_primary1);
+	m_PlayerCount.setContentAlignment(vgui::Label::a_west);
+
+	m_PlayerCount.setBounds(1179 , mapLabelY / 2, 115, 20);
+	m_PlayerCount.setContentFitted(false);
+	m_PlayerCount.setParent(this);
 
 	// Setup the header (labels like "name", "class", etc..).
 	m_HeaderGrid.SetDimensions(NUM_COLUMNS, 1);
@@ -333,6 +343,21 @@ void ScorePanel::Update()
 	{
 		m_MapLabel.setText("Unknown");
 	}
+
+	int currentPlayers = 0;
+	int maxPlayers = gEngfuncs.GetMaxClients();
+
+	for (int i = 1; i <= maxPlayers; i++)
+	{
+		if (g_PlayerInfoList[i].name && strlen(g_PlayerInfoList[i].name) > 0)
+		{
+			currentPlayers++;
+		}
+	}
+
+	char playersText[64];
+	sprintf(playersText, "%d/%d", currentPlayers, maxPlayers);
+	m_PlayerCount.setText(playersText);
 
 	m_iRows = 0;
 	gViewPort->GetAllPlayersInfo();
@@ -853,8 +878,9 @@ void ScorePanel::FillGrid()
 
 					gHUD.AppendPlayerIfOnlyColorTags(name, sizeof(name));
 
-					/*char stripped_name[128];
-					color_tags::strip_color_tags(stripped_name, name, sizeof(stripped_name));*/
+					if (gHUD.m_Teamplay && gHUD.m_DeathNotice.m_pCvarTeamColors->value == 1.0f) {
+						color_tags::strip_color_tags(name, name, sizeof(name));
+					}
 
 					// Check if player is spectator and add (S) suffix
 					if (g_IsSpectator[m_iSortedRows[row]] || started_drawing_spectators) {

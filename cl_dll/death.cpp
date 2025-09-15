@@ -163,7 +163,7 @@ int CHudDeathNotice::Draw(float flTime)
 
 				gHUD.AppendPlayerIfOnlyColorTags(rgDeathNoticeList[i].szKiller, sizeof(rgDeathNoticeList[i].szKiller));
 
-				if (gHUD.m_Teamplay && m_pCvarTeamColors->value != 0.0f)
+				if (gHUD.m_Teamplay && m_pCvarTeamColors->value == 1.0f)
 				{
 					char cleanKiller[MAX_PLAYER_NAME_LENGTH * 2];
 					color_tags::strip_color_tags(cleanKiller, rgDeathNoticeList[i].szKiller, sizeof(cleanKiller));
@@ -183,7 +183,7 @@ int CHudDeathNotice::Draw(float flTime)
 							x,
 							y,
 							rgDeathNoticeList[i].szKiller,
-							true,
+							false,
 							rgDeathNoticeList[i].KillerColor[0],
 							rgDeathNoticeList[i].KillerColor[1],
 							rgDeathNoticeList[i].KillerColor[2]
@@ -206,7 +206,7 @@ int CHudDeathNotice::Draw(float flTime)
 
 			x += (gHUD.GetSpriteRect(id).right - gHUD.GetSpriteRect(id).left);
 
-			if (gHUD.m_Teamplay && m_pCvarTeamColors->value != 0.0f) {
+			if (gHUD.m_Teamplay && m_pCvarTeamColors->value == 1.0f) {
 				char cleanVictim[MAX_PLAYER_NAME_LENGTH * 2];
 				color_tags::strip_color_tags(cleanVictim, rgDeathNoticeList[i].szVictim, sizeof(cleanVictim));
 				if (rgDeathNoticeList[i].VictimColor)
@@ -229,7 +229,7 @@ int CHudDeathNotice::Draw(float flTime)
 							x,
 							y,
 							rgDeathNoticeList[i].szVictim,
-							true,
+							false,
 							rgDeathNoticeList[i].VictimColor[0],
 							rgDeathNoticeList[i].VictimColor[1],
 							rgDeathNoticeList[i].VictimColor[2]
@@ -334,7 +334,7 @@ int CHudDeathNotice::MsgFunc_DeathMsg(const char* pszName, int iSize, void* pbuf
 	rgDeathNoticeList[i].flDisplayTime = gHUD.m_flTime + DEATHNOTICE_DISPLAY_TIME;
 
 	// Play kill sound
-	if ((g_PlayerInfoList[killer].thisplayer || g_iUser2 == killer) &&
+	if (g_PlayerInfoList[killer].thisplayer &&
 		!rgDeathNoticeList[i].iNonPlayerKill &&
 		!rgDeathNoticeList[i].iSuicide &&
 		m_pCvarKillSnd->value > 0.0f)

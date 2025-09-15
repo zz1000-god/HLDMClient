@@ -372,10 +372,15 @@ void CHudMessage::MessageDrawScan(client_textmessage_t* pMessage, float time)
 								int blend = m_parms.fadeBlend;
 								if (blend > 255) blend = 255;
 								else if (blend < 0) blend = 0;
+								int baseR = r, baseG = g, baseB = b;
 
-								finalR = ((r * (255 - blend)) + (0 * blend)) >> 8;
-								finalG = ((g * (255 - blend)) + (0 * blend)) >> 8;
-								finalB = ((b * (255 - blend)) + (0 * blend)) >> 8;
+								if (gHUD.m_Rainbow.IsEnabled()) {
+									gHUD.m_Rainbow.GetRainbowColor(m_parms.x, m_parms.y, baseR, baseG, baseB);
+								}
+
+								finalR = ((baseR * (255 - blend)) + (0 * blend)) >> 8;
+								finalG = ((baseG * (255 - blend)) + (0 * blend)) >> 8;
+								finalB = ((baseB * (255 - blend)) + (0 * blend)) >> 8;
 							}
 							break;
 
@@ -389,11 +394,16 @@ void CHudMessage::MessageDrawScan(client_textmessage_t* pMessage, float time)
 								int blend = m_parms.fadeBlend;
 								if (blend > 255) blend = 255;
 								else if (blend < 0) blend = 0;
+								int baseR = r, baseG = g, baseB = b;
+
+								if (gHUD.m_Rainbow.IsEnabled()) {
+									gHUD.m_Rainbow.GetRainbowColor(m_parms.x, m_parms.y, baseR, baseG, baseB);
+								}
 
 								// Blend color tag colors with fade
-								finalR = ((r * (255 - blend)) + (0 * blend)) >> 8;
-								finalG = ((g * (255 - blend)) + (0 * blend)) >> 8;
-								finalB = ((b * (255 - blend)) + (0 * blend)) >> 8;
+								finalR = ((baseR * (255 - blend)) + (0 * blend)) >> 8;
+								finalG = ((baseG * (255 - blend)) + (0 * blend)) >> 8;
+								finalB = ((baseB * (255 - blend)) + (0 * blend)) >> 8;
 							}
 							break;
 
@@ -402,11 +412,11 @@ void CHudMessage::MessageDrawScan(client_textmessage_t* pMessage, float time)
 							finalR = r;
 							finalG = g;
 							finalB = b;
-							break;
-					}
 
-					if (gHUD.m_Rainbow.IsEnabled()) {
-						gHUD.m_Rainbow.GetRainbowColor(m_parms.x, m_parms.y, finalR, finalG, finalB);
+							if (gHUD.m_Rainbow.IsEnabled()) {
+								gHUD.m_Rainbow.GetRainbowColor(m_parms.x, m_parms.y, finalR, finalG, finalB);
+							}
+							break;
 					}
 
 					// Draw character if within screen bounds and visible

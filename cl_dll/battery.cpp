@@ -136,6 +136,7 @@ int CHudBattery::Draw(float flTime)
 	int iOffset = (m_prc1->bottom - m_prc1->top) / 6;
 	int customX = 0, customY = 0;
 	int useCustomPos = false;
+	int width = (m_prc1->right - m_prc1->left);
 	if (hud_battery_pos && strcmp(hud_battery_pos->string, "0 0") != 0)
 	{
 		if (sscanf(hud_battery_pos->string, "%d %d", &customX, &customY) == 2)

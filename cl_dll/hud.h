@@ -284,7 +284,6 @@ public:
 	int VidInit( void );
 	int Draw( float flTime );
 	int MsgFunc_DeathMsg( const char *pszName, int iSize, void *pbuf );
-	int DrawColoredConsoleString(int x, int y, const char* string);
 
 	cvar_t* m_pCvarTeamColors;
 
@@ -628,8 +627,8 @@ public:
 		int y,
 		char* string,
 		bool use_default_color = false,
-		float default_r = 1.0f,
-		float default_g = 160.0f / 255.0f,
+		float default_r = 0.0f,
+		float default_g = 0.0f,
 		float default_b = 0.0f
 	);
 	void GetConsoleStringSizeWithColorTags(char* string, int& width, int& height);

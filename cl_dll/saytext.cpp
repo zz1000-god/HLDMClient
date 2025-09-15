@@ -1,4 +1,4 @@
-/***
+﻿/***
 *
 *	Copyright (c) 1996-2002, Valve LLC. All rights reserved.
 *	
@@ -142,17 +142,33 @@ int CHudSayText::Draw(float flTime)
 
 				gHUD.AppendPlayerIfOnlyColorTags(buf, sizeof(buf));
 
-				int x = gHUD.DrawConsoleStringWithColorTags(
-					LINE_START,
-					y,
-					buf + 1,
-					true,
-					g_pflNameColors[i][0],
-					g_pflNameColors[i][1],
-					g_pflNameColors[i][2]
-				);
+				int x;
 
-				gHUD.DrawConsoleStringWithColorTags(x, y, g_szLineBuffer[i] + g_iNameLengths[i]);
+				if (gHUD.m_Teamplay && gHUD.m_DeathNotice.m_pCvarTeamColors->value == 1.0f) {
+					x = gHUD.DrawConsoleStringWithColorTags(
+						LINE_START,
+						y,
+						buf + 1,
+						true,
+						g_pflNameColors[i][0],
+						g_pflNameColors[i][1],
+						g_pflNameColors[i][2]
+					);
+				}
+				else {
+					x = gHUD.DrawConsoleStringWithColorTags(
+						LINE_START,
+						y,
+						buf + 1);
+				}
+
+				if (gHUD.m_Teamplay && gHUD.m_DeathNotice.m_pCvarTeamColors->value == 1.0f) {
+					gHUD.DrawConsoleStringWithColorTags(x, y, g_szLineBuffer[i] + g_iNameLengths[i], true, g_pflNameColors[i][0], g_pflNameColors[i][1], g_pflNameColors[i][2]);
+				}
+				else
+				{
+					gHUD.DrawConsoleStringWithColorTags(x, y, g_szLineBuffer[i] + g_iNameLengths[i]);
+				}
 			}
 			else {
 				gHUD.DrawConsoleStringWithColorTags(LINE_START, y, g_szLineBuffer[i]);
@@ -309,7 +325,6 @@ void CHudSayText :: SayTextPrint( const char *pszBuf, int iBufSize, int clientIn
 	char buf[1024];
 	snprintf(buf, sizeof(buf), "%s %s", timebuf, g_szLineBuffer[i]);
 	ConsolePrint(buf);
-
 	LogChatMessage(g_szLineBuffer[i]);
 
 	// make sure the text fits in one line

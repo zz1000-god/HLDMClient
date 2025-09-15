@@ -428,7 +428,8 @@ void toggle_command()
 	{
 		// Toggle between 0 and 1
 		int current_value = (int)cvar->value;
-		sprintf(cmd, "%s %d", cvar_name, ~current_value);
+		int new_value = (current_value == 0.0f) ? 1 : 0;
+		sprintf(cmd, "%s %d", cvar_name, new_value);
 		gEngfuncs.pfnClientCmd(cmd);
 		return;
 	}
@@ -576,7 +577,7 @@ void CHud :: Init( void )
 	hud_watermark = CVAR_CREATE("hud_watermark", "1", FCVAR_ARCHIVE);
 
 	gEngfuncs.pfnAddCommand("joinlast", joinlast);
-	gEngfuncs.pfnAddCommand("_toogle", toggle_command);
+	gEngfuncs.pfnAddCommand("_toggle", toggle_command);
 
 	m_pSpriteList = NULL;
 

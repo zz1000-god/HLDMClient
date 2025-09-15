@@ -147,10 +147,11 @@ int CHudStatusBar::Draw(float fTime)
 			x = max(0, max(2, (ScreenWidth - TextWidth)) / 2);
 			y = (ScreenHeight / 2) + (TextHeight * CVAR_GET_FLOAT("hud_centerid"));
 		}
-		if (gHUD.m_Teamplay && gHUD.m_DeathNotice.m_pCvarTeamColors->value > 0.0f) {
+		if (gHUD.m_Teamplay && gHUD.m_DeathNotice.m_pCvarTeamColors->value == 1.0f) {
 			char cleantext[MAX_STATUSTEXT_LENGTH + 1];
 			color_tags::strip_color_tags(cleantext, text, sizeof(cleantext));
-			gEngfuncs.pfnDrawSetTextColor(m_pflNameColors[i][0],
+			gEngfuncs.pfnDrawSetTextColor(
+				m_pflNameColors[i][0],
 				m_pflNameColors[i][1],
 				m_pflNameColors[i][2]);
 
@@ -163,7 +164,7 @@ int CHudStatusBar::Draw(float fTime)
 					x,
 					y,
 					text,
-					true,
+					false,
 					m_pflNameColors[i][0],
 					m_pflNameColors[i][1],
 					m_pflNameColors[i][2]

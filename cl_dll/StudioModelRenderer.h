@@ -126,6 +126,8 @@ public:
 	cvar_t			*m_pCvarDrawEntities;
 
 	cvar_t			*m_pCvarViewmodelFOV;
+	cvar_t			*m_pCvarViewmodelNoIdle;
+	cvar_t			*m_pCvarViewmodelNoEquip;
 
 	// The entity which we are currently rendering.
 	cl_entity_t		*m_pCurrentEntity;		

@@ -401,8 +401,13 @@ float V_CalcBob ( struct ref_params_s *pparams )
 	// (don't count Z, or jumping messes it up)
 	VectorCopy( pparams->simvel, vel );
 	vel[2] = 0;
-
-	bob = sqrt( vel[0] * vel[0] + vel[1] * vel[1] ) * cl_bob->value;
+	if (!cl_hl2_bob->value) {
+		bob = sqrt(vel[0] * vel[0] + vel[1] * vel[1]) * cl_bob->value;
+	}
+	else
+	{
+		bob = sqrt(vel[0] * vel[0] + vel[1] * vel[1]) * 0;
+	}
 	bob = bob * 0.3 + bob * 0.7 * sin(cycle);
 	bob = min( bob, 4.0f );
 	bob = max( bob, -7.0f );
@@ -1920,6 +1925,7 @@ void CL_DLLEXPORT V_CalcRefdef( struct ref_params_s *pparams )
 {
 //	RecClCalcRefdef(pparams);
 	gHUD.m_Speedometer.UpdateSpeed(pparams->simvel);
+	gHUD.m_Jumpspeed.UpdateSpeed(pparams->simvel);
 
 	// intermission / finale rendering
 	if ( pparams->intermission )
