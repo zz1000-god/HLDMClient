@@ -35,7 +35,6 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - `hud_health_pos "x y"` change position of health
   - `hud_health_bar "1"` enable\disable after health vertical bar
   - `hud_battery_pos "x y"` change position of battery
-  - `hud_speedometer_pos "x y"` change position of speedometer
   - `hud_weapon_pos "x y"` change position of weapon sprite
 
 -Added command `joinlast` like in rofi s client (NGHL)
@@ -60,7 +59,9 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - Added `cl_oldbob` weapon bob like in pre HL25 update
 
 ### 👕 Forced Models
-- `cl_forceenmodel "model"` — Replace all enemy models with a specific one.
+- `cl_forcemodel "player nickname" "model` - Replace model by nickname.
+- `cl_forcemmodel "oldmodel" "newmodel"` - Replace all models by model, example gordon replaced to gman.
+- `cl_forceenemymodel "model"` — Replace all enemy models with a specific one.
 - `cl_forceteammodel "model"` — Replace all teammates' models.
 
 ### 🛠️ Bug Fixes
