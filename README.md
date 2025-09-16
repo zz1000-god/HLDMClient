@@ -59,7 +59,7 @@ A custom Half-Life Deathmatch client built on top of the Half-Life SDK. This cli
   - Added `cl_oldbob` weapon bob like in pre HL25 update
 
 ### 👕 Forced Models
-- `cl_forcemodel "player nickname" "model` - Replace model by nickname.
+- `cl_forcemodel "player nickname" "model"` - Replace model by nickname.
 - `cl_forcemmodel "oldmodel" "newmodel"` - Replace all models by model, example gordon replaced to gman.
 - `cl_forceenemymodel "model"` — Replace all enemy models with a specific one.
 - `cl_forceteammodel "model"` — Replace all teammates' models.
